@@ -49,5 +49,4 @@ fi
 
 wdir=`get_current_dir`
 
-docker exec -w $wdir -it $cid pio $@
-
+docker exec -w $wdir $cid pio $@
