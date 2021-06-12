@@ -24,7 +24,7 @@ import akka.http.scaladsl.server.Route
 import org.apache.predictionio.data.storage._
 import org.joda.time.DateTime
 import org.specs2.mutable.Specification
-import sun.misc.BASE64Encoder
+import java.util.Base64
 import akka.http.scaladsl.testkit.Specs2RouteTest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -82,7 +82,7 @@ class SegmentIOAuthSpec extends Specification with Specs2RouteTest {
   val statsActorRef = system.actorSelection("/user/StatsActor")
   val pluginsActorRef = system.actorSelection("/user/PluginsActor")
 
-  val base64Encoder = new BASE64Encoder
+  val base64Encoder = Base64.getEncoder
   val logger = Logging(system, getClass)
   val config = EventServerConfig(ip = "0.0.0.0", port = 7070)
 
@@ -142,7 +142,7 @@ class SegmentIOAuthSpec extends Specification with Specs2RouteTest {
         """.stripMargin
 
       val accessKey = "abc:"
-      val accessKeyEncoded = base64Encoder.encodeBuffer(accessKey.getBytes)
+      val accessKeyEncoded = base64Encoder.encode(accessKey.getBytes)
       Post("/webhooks/segmentio.json")
           .withHeaders(RawHeader("Authorization", s"Basic $accessKeyEncoded"))
           .withEntity(ContentTypes.`application/json`, jsonReq) ~> route ~> check {

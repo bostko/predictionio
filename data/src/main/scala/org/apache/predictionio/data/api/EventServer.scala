@@ -19,7 +19,7 @@
 package org.apache.predictionio.data.api
 
 import akka.event.{Logging, LoggingAdapter}
-import sun.misc.BASE64Decoder
+import java.util.Base64
 import java.util.concurrent.TimeUnit
 
 import akka.actor._
@@ -64,7 +64,7 @@ object EventServer {
   import Common._
 
   private val MaxNumberOfEventsPerBatchRequest = 50
-  private lazy val base64Decoder = new BASE64Decoder
+  private lazy val base64Decoder = Base64.getDecoder
   private implicit val timeout = Timeout(5, TimeUnit.SECONDS)
   private case class AuthData(appId: Int, channelId: Option[Int], events: Seq[String])
 
@@ -116,7 +116,7 @@ object EventServer {
               authHeader.value.split("Basic ") match {
                 case Array(_, value) =>
                   val appAccessKey =
-                    new String(base64Decoder.decodeBuffer(value)).trim.split(":")(0)
+                    new String(base64Decoder.decode(value)).trim.split(":")(0)
                   accessKeysClient.get(appAccessKey) match {
                     case Some(k) => Right(AuthData(k.appid, None, k.events))
                     case None => FailedAuth
