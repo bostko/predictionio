@@ -20,7 +20,7 @@ import java.sql.Timestamp
 
 import org.apache.predictionio.data.store.PEventStore
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.joda.time.DateTime
+import java.time.Instant
 
 
 /** This object provides a set of operation to access Event Store
@@ -77,8 +77,8 @@ object PPythonEventStore {
       )
     PEventStore.find(appName,
       Option(channelName),
-      Option(startTime).map(t => new DateTime(t.getTime)),
-      Option(untilTime).map(t => new DateTime(t.getTime)),
+      Option(startTime).map(t => Instant.ofEpochMilli(t.getTime)),
+      Option(untilTime).map(t => Instant.ofEpochMilli(t.getTime)),
       Option(entityType),
       Option(entityId),
       Option(eventNames),
@@ -100,10 +100,10 @@ object PPythonEventStore {
         e.entityId,
         e.targetEntityType.orNull,
         e.targetEntityId.orNull,
-        new Timestamp(e.eventTime.getMillis),
+        new Timestamp(e.eventTime.toEpochMilli),
         e.tags.mkString("\t"),
         e.prId.orNull,
-        new Timestamp(e.creationTime.getMillis),
+        new Timestamp(e.creationTime.toEpochMilli),
         e.properties.fields.mapValues(_.values.toString)
       )
     }.toDF(colNames: _*)
@@ -141,13 +141,13 @@ object PPythonEventStore {
     PEventStore.aggregateProperties(appName,
       entityType,
       Option(channelName),
-      Option(startTime).map(t => new DateTime(t.getTime)),
-      Option(untilTime).map(t => new DateTime(t.getTime)),
+      Option(startTime).map(t => Instant.ofEpochMilli(t.getTime)),
+      Option(untilTime).map(t => Instant.ofEpochMilli(t.getTime)),
       Option(required.toSeq))(spark.sparkContext).map { x =>
       val m = x._2
       (x._1,
-        new Timestamp(m.firstUpdated.getMillis),
-        new Timestamp(m.lastUpdated.getMillis),
+        new Timestamp(m.firstUpdated.toEpochMilli),
+        new Timestamp(m.lastUpdated.toEpochMilli),
         m.fields.mapValues(_.values.toString)
       )
     }.toDF(colNames: _*)

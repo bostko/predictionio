@@ -27,10 +27,9 @@ import org.apache.predictionio.data.storage.EngineInstance
 import org.apache.predictionio.data.storage.EvaluationInstance
 import org.apache.predictionio.data.storage.Model
 import org.apache.predictionio.data.storage.Storage
-
-import com.github.nscala_time.time.Imports.DateTime
 import grizzled.slf4j.Logger
 
+import java.time.Instant
 import scala.language.existentials
 
 /** CoreWorkflow handles PredictionIO metadata and environment variables of
@@ -84,7 +83,7 @@ object CoreWorkflow {
       val engineInstances = Storage.getMetaDataEngineInstances
       engineInstances.update(engineInstance.copy(
         status = "COMPLETED",
-        endTime = DateTime.now
+        endTime = Instant.now
         ))
 
       logger.info("Training completed successfully.")
@@ -144,7 +143,7 @@ object CoreWorkflow {
         val evaluatedEvaluationInstance = evaluationInstance.copy(
           status = "EVALCOMPLETED",
           id = evaluationInstanceId,
-          endTime = DateTime.now,
+          endTime = Instant.now,
           evaluatorResults = evaluatorResult.toOneLiner,
           evaluatorResultsHTML = evaluatorResult.toHTML,
           evaluatorResultsJSON = evaluatorResult.toJSON

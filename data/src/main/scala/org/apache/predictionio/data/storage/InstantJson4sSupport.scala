@@ -19,9 +19,9 @@
 package org.apache.predictionio.data.storage
 
 import org.apache.predictionio.annotation.DeveloperApi
-import org.apache.predictionio.data.{Utils => DataUtils}
-import org.joda.time.DateTime
 import org.json4s._
+
+import java.time.Instant
 
 /** :: DeveloperApi ::
   * JSON4S serializer for Joda-Time
@@ -29,22 +29,22 @@ import org.json4s._
   * @group Common
   */
 @DeveloperApi
-object DateTimeJson4sSupport {
+object InstantJson4sSupport {
 
   @transient lazy implicit val formats = DefaultFormats
 
-  /** Serialize DateTime to JValue */
+  /** Serialize Instant to JValue */
   def serializeToJValue: PartialFunction[Any, JValue] = {
-    case d: DateTime => JString(DataUtils.dateTimeToString(d))
+    case d: Instant => JString(d.toString)
   }
 
-  /** Deserialize JValue to DateTime */
-  def deserializeFromJValue: PartialFunction[JValue, DateTime] = {
-    case jv: JValue => DataUtils.stringToDateTime(jv.extract[String])
+  /** Deserialize JValue to Instant */
+  def deserializeFromJValue: PartialFunction[JValue, Instant] = {
+    case jv: JValue => Instant.parse(jv.extract[String])
   }
 
   /** Custom JSON4S serializer for Joda-Time */
-  class Serializer extends CustomSerializer[DateTime](format => (
+  class Serializer extends CustomSerializer[Instant](format => (
     deserializeFromJValue, serializeToJValue))
 
 }

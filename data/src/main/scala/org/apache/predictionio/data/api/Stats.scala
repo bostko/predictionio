@@ -21,9 +21,9 @@ package org.apache.predictionio.data.api
 import akka.http.scaladsl.model.StatusCode
 import org.apache.predictionio.data.storage.Event
 
+import java.time.Instant
 import scala.collection.mutable.{HashMap => MHashMap}
 import scala.collection.mutable
-import com.github.nscala_time.time.Imports.DateTime
 
 case class EntityTypesEvent(
   val entityType: String,
@@ -39,19 +39,19 @@ case class EntityTypesEvent(
 case class KV[K, V](key: K, value: V)
 
 case class StatsSnapshot(
-  val startTime: DateTime,
-  val endTime: Option[DateTime],
+  val startTime: Instant,
+  val endTime: Option[Instant],
   val basic: Seq[KV[EntityTypesEvent, Long]],
   val statusCode: Seq[KV[StatusCode, Long]]
 )
 
 
-class Stats(val startTime: DateTime) {
-  private[this] var _endTime: Option[DateTime] = None
+class Stats(val startTime: Instant) {
+  private[this] var _endTime: Option[Instant] = None
   var statusCodeCount = MHashMap[(Int, StatusCode), Long]().withDefaultValue(0L)
   var eteCount = MHashMap[(Int, EntityTypesEvent), Long]().withDefaultValue(0L)
 
-  def cutoff(endTime: DateTime) {
+  def cutoff(endTime: Instant) {
     _endTime = Some(endTime)
   }
 

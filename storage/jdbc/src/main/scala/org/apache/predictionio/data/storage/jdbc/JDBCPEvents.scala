@@ -17,9 +17,8 @@
 
 package org.apache.predictionio.data.storage.jdbc
 
+import java.time.{Duration, Instant}
 import java.sql.{DriverManager, ResultSet}
-
-import com.github.nscala_time.time.Imports._
 import org.apache.predictionio.data.storage.{DataMap, Event, PEvents, StorageClientConfig}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.{JdbcRDD, RDD}
@@ -28,6 +27,8 @@ import org.json4s.JObject
 import org.json4s.native.Serialization
 import scalikejdbc._
 
+import java.time.temporal.ChronoUnit
+
 /** JDBC implementation of [[PEvents]] */
 class JDBCPEvents(client: String, config: StorageClientConfig, namespace: String) extends PEvents {
   @transient private implicit lazy val formats = org.json4s.DefaultFormats
@@ -35,21 +36,23 @@ class JDBCPEvents(client: String, config: StorageClientConfig, namespace: String
   def find(
     appId: Int,
     channelId: Option[Int] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,
     targetEntityType: Option[Option[String]] = None,
     targetEntityId: Option[Option[String]] = None)(sc: SparkContext): RDD[Event] = {
 
-    val lower = startTime.map(_.getMillis).getOrElse(0.toLong)
+    val lower = startTime.map(_.toEpochMilli).getOrElse(0.toLong)
     /** Change the default upper bound from +100 to +1 year because MySQL's
       * FROM_UNIXTIME(t) will return NULL if we use +100 years.
       */
-    val upper = untilTime.map(_.getMillis).getOrElse((DateTime.now + 1.years).getMillis)
+    val upper = untilTime.map(_.toEpochMilli).getOrElse(Instant.now.plus(1, ChronoUnit.YEARS).toEpochMilli)
     val par = scala.math.min(
-      new Duration(upper - lower).getStandardDays,
+      // TODO
+      0,
+//      new Duration(upper - lower).getStandardDays,
       config.properties.getOrElse("PARTITIONS", "4").toLong).toInt
     val entityTypeClause = entityType.map(x => s"and entityType = '$x'").getOrElse("")
     val entityIdClause = entityId.map(x => s"and entityId = '$x'").getOrElse("")
@@ -71,11 +74,9 @@ class JDBCPEvents(client: String, config: StorageClientConfig, namespace: String
         targetEntityId,
         properties,
         eventTime,
-        eventTimeZone,
         tags,
         prId,
-        creationTime,
-        creationTimeZone
+        creationTime
       from ${JDBCUtils.eventTableName(namespace, appId, channelId)}
       where
         eventTime >= ${JDBCUtils.timestampFunction(client)}(?) and
@@ -108,13 +109,11 @@ class JDBCPEvents(client: String, config: StorageClientConfig, namespace: String
           targetEntityId = Option(r.getString("targetEntityId")),
           properties = Option(r.getString("properties")).map(x =>
             DataMap(Serialization.read[JObject](x))).getOrElse(DataMap()),
-          eventTime = new DateTime(r.getTimestamp("eventTime").getTime,
-            DateTimeZone.forID(r.getString("eventTimeZone"))),
+          eventTime = r.getTimestamp("eventTime").toInstant,
           tags = Option(r.getString("tags")).map(x =>
             x.split(",").toList).getOrElse(Nil),
           prId = Option(r.getString("prId")),
-          creationTime = new DateTime(r.getTimestamp("creationTime").getTime,
-            DateTimeZone.forID(r.getString("creationTimeZone"))))
+          creationTime = r.getTimestamp("creationTime").toInstant)
       }).cache()
   }
 
@@ -133,11 +132,9 @@ class JDBCPEvents(client: String, config: StorageClientConfig, namespace: String
       , "targetEntityId"
       , "properties"
       , "eventTime"
-      , "eventTimeZone"
       , "tags"
       , "prId"
-      , "creationTime"
-      , "creationTimeZone")
+      , "creationTime")
 
     // Necessary for handling postgres "case-sensitivity"
     val eventsColumnNamesInSQL = JDBCUtils.driverType(client) match {
@@ -152,12 +149,10 @@ class JDBCPEvents(client: String, config: StorageClientConfig, namespace: String
         , event.targetEntityType.orNull
         , event.targetEntityId.orNull
         , if (!event.properties.isEmpty) Serialization.write(event.properties.toJObject) else null
-        , new java.sql.Timestamp(event.eventTime.getMillis)
-        , event.eventTime.getZone.getID
+        , new java.sql.Timestamp(event.eventTime.toEpochMilli)
         , if (event.tags.nonEmpty) Some(event.tags.mkString(",")) else null
         , event.prId
-        , new java.sql.Timestamp(event.creationTime.getMillis)
-        , event.creationTime.getZone.getID)
+        , new java.sql.Timestamp(event.creationTime.toEpochMilli))
     }.toDF(eventsColumnNamesInSQL:_*)
 
     val prop = new java.util.Properties

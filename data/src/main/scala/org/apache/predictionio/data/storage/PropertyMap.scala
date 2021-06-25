@@ -17,7 +17,7 @@
 
 package org.apache.predictionio.data.storage
 
-import org.joda.time.DateTime
+import java.time.Instant
 
 import org.json4s.JValue
 import org.json4s.JObject
@@ -35,8 +35,8 @@ import org.json4s.native.JsonMethods.parse
   */
 class PropertyMap(
   fields: Map[String, JValue],
-  val firstUpdated: DateTime,
-  val lastUpdated: DateTime
+  val firstUpdated: Instant,
+  val lastUpdated: Instant
 ) extends DataMap(fields) {
 
   override
@@ -80,7 +80,7 @@ object PropertyMap {
     * @return a new PropertyMap
     */
   def apply(fields: Map[String, JValue],
-    firstUpdated: DateTime, lastUpdated: DateTime): PropertyMap =
+    firstUpdated: Instant, lastUpdated: Instant): PropertyMap =
     new PropertyMap(fields, firstUpdated, lastUpdated)
 
   /** Create an PropertyMap from a JSON String and firstUpdated and lastUpdated
@@ -90,7 +90,7 @@ object PropertyMap {
     * @param lastUpdated Last updated time
     * @return a new PropertyMap
     */
-  def apply(js: String, firstUpdated: DateTime, lastUpdated: DateTime)
+  def apply(js: String, firstUpdated: Instant, lastUpdated: Instant)
   : PropertyMap = apply(
       fields = parse(js).asInstanceOf[JObject].obj.toMap,
       firstUpdated = firstUpdated,

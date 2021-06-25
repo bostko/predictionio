@@ -25,8 +25,8 @@ import org.apache.predictionio.data.store.PEventStore
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.apache.spark.SparkContext
-import org.joda.time.DateTime
 
+import _root_.java.time.Instant
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
 import scala.util.hashing.MurmurHash3
@@ -56,8 +56,8 @@ object DataView {
   def create[E <: Product: TypeTag: ClassTag](
     appName: String,
     channelName: Option[String] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     conversionFunction: Event => Option[E],
     name: String = "",
     version: String = "")(sc: SparkContext): DataFrame = {
@@ -68,11 +68,11 @@ object DataView {
 
     val beginTime = startTime match {
       case Some(t) => t
-      case None => new DateTime(0L)
+      case None => Instant.ofEpochMilli(0L)
     }
     val endTime = untilTime match {
       case Some(t) => t
-      case None => DateTime.now() // fix the current time
+      case None => Instant.now() // fix the current time
     }
     // detect changes to the case class
     val uid = java.io.ObjectStreamClass.lookup(implicitly[reflect.ClassTag[E]].runtimeClass)

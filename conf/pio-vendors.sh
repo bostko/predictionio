@@ -20,11 +20,11 @@
 # `source conf/set_build_profile.sh $BUILD_PROFILE` to get the proper versions
 
 if [ -z "$PIO_SCALA_VERSION" ]; then
-    PIO_SCALA_VERSION="2.11.12"
+    PIO_SCALA_VERSION="2.12.6"
 fi
 
 if [ -z "$PIO_SPARK_VERSION" ]; then
-    PIO_SPARK_VERSION="2.1.3"
+    PIO_SPARK_VERSION="3.0.3"
 fi
 
 if [ -z "$PIO_HADOOP_VERSION" ]; then

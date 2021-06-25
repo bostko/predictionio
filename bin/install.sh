@@ -18,7 +18,7 @@
 #
 
 OS=`uname`
-SPARK_VERSION=2.1.1
+SPARK_VERSION=3.0.3
 # Looks like support for Elasticsearch 2.0 will require 2.0 so deferring
 ELASTICSEARCH_VERSION=5.6.9
 HBASE_VERSION=1.2.6

@@ -159,8 +159,8 @@ The following code aggregates the properties of `user` and then map each result 
    dsp.getAppName(),
    "user",
    OptionHelper.<String>none(),
-   OptionHelper.<DateTime>none(),
-   OptionHelper.<DateTime>none(),
+   OptionHelper.<Instant>none(),
+   OptionHelper.<Instant>none(),
    OptionHelper.<List<String>>none(),
    sc)
    .mapToPair(new PairFunction<Tuple2<String, PropertyMap>, String, User>() {
@@ -190,8 +190,8 @@ Similarly, the following code aggregates `item` properties and then map each res
     dsp.getAppName(),
     "item",
     OptionHelper.<String>none(),
-    OptionHelper.<DateTime>none(),
-    OptionHelper.<DateTime>none(),
+    OptionHelper.<Instant>none(),
+    OptionHelper.<Instant>none(),
     OptionHelper.<List<String>>none(),
     sc)
     .mapToPair(new PairFunction<Tuple2<String, PropertyMap>, String, Item>() {
@@ -213,8 +213,8 @@ Similarly, the following code aggregates `item` properties and then map each res
   JavaRDD<UserItemEvent> viewEventsRDD = PJavaEventStore.find(
     dsp.getAppName(),
     OptionHelper.<String>none(),
-    OptionHelper.<DateTime>none(),
-    OptionHelper.<DateTime>none(),
+    OptionHelper.<Instant>none(),
+    OptionHelper.<Instant>none(),
     OptionHelper.some("user"),
     OptionHelper.<String>none(),
     OptionHelper.some(Collections.singletonList("view")),
@@ -238,8 +238,8 @@ Similarly, we read buy events from Event Server.
   JavaRDD<UserItemEvent> viewEventsRDD = PJavaEventStore.find(
     dsp.getAppName(),
     OptionHelper.<String>none(),
-    OptionHelper.<DateTime>none(),
-    OptionHelper.<DateTime>none(),
+    OptionHelper.<Instant>none(),
+    OptionHelper.<Instant>none(),
     OptionHelper.some("user"),
     OptionHelper.<String>none(),
     OptionHelper.some(Collections.singletonList("buy")),

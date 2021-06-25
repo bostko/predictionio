@@ -33,19 +33,24 @@ lazy val scalaSparkDepsVersion = Map(
     "2.3" -> Map(
       "akka" -> "2.5.17",
       "hadoop" -> "2.7.7",
-      "json4s" -> "3.2.11")))
+      "json4s" -> "3.2.11")),
+  "2.12" -> Map(
+    "3.0" -> Map(
+      "akka" -> "2.5.31",
+      "hadoop" -> "2.7.7",
+      "json4s" -> "3.6.11")))
 
 name := "apache-predictionio-parent"
 
-version in ThisBuild := "0.15.0-SNAPSHOT"
+version in ThisBuild := "0.16.0-SNAPSHOT"
 
 organization in ThisBuild := "org.apache.predictionio"
 
-scalaVersion in ThisBuild := sys.props.getOrElse("scala.version", "2.11.12")
+scalaVersion in ThisBuild := sys.props.getOrElse("scala.version", "2.12.6")
 
 scalaBinaryVersion in ThisBuild := binaryVersion(scalaVersion.value)
 
-crossScalaVersions in ThisBuild := Seq("2.11.12")
+crossScalaVersions in ThisBuild := Seq("2.12.6")
 
 scalacOptions in ThisBuild ++= Seq("-deprecation", "-unchecked", "-feature")
 
@@ -56,22 +61,23 @@ javacOptions in (ThisBuild, compile) ++= Seq("-source", "1.8", "-target", "1.8",
   "-Xlint:deprecation", "-Xlint:unchecked")
 
 // Ignore differentiation of Spark patch levels
-sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", "2.1.3")
+sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", "3.0.3")
 
 sparkBinaryVersion in ThisBuild := binaryVersion(sparkVersion.value)
 
 hadoopVersion in ThisBuild := sys.props.getOrElse("hadoop.version", "2.7.7")
 
-akkaVersion in ThisBuild := sys.props.getOrElse("akka.version", "2.5.17")
+akkaVersion in ThisBuild := sys.props.getOrElse("akka.version", "2.6.8")
 
 elasticsearchVersion in ThisBuild := sys.props.getOrElse("elasticsearch.version", "5.6.9")
 
-hbaseVersion in ThisBuild := sys.props.getOrElse("hbase.version", "1.2.6")
+hbaseVersion in ThisBuild := sys.props.getOrElse("hbase.version", "2.1.7")
 
 json4sVersion in ThisBuild := {
   sparkBinaryVersion.value match {
     case "2.0" | "2.1" | "2.2" | "2.3" => "3.2.11"
     case "2.4" => "3.5.3"
+    case "3.0" => "3.6.11"
   }
 }
 
@@ -86,49 +92,31 @@ val commonSettings = Seq(
 
 val commonTestSettings = Seq(
   libraryDependencies ++= Seq(
-    "org.postgresql"   % "postgresql"  % "9.4-1204-jdbc41" % "test",
-    "org.scalikejdbc" %% "scalikejdbc" % "3.1.0" % "test"))
-
-val dataElasticsearch = (project in file("storage/elasticsearch")).
+    "org.postgresql"   % "postgresql"  % "9.4.1212" % "test",
+    "org.scalikejdbc" %% "scalikejdbc" % "3.2.3" % "test"))
+val dataJdbc = (project in file("storage/jdbc")).
   settings(commonSettings: _*)
 
-val dataHbase = (project in file("storage/hbase")).
-  settings(commonSettings: _*).
-  enablePlugins(GenJavadocPlugin)
-
-val dataHdfs = (project in file("storage/hdfs")).
-  settings(commonSettings: _*).
-  enablePlugins(GenJavadocPlugin)
-
-val dataJdbc = (project in file("storage/jdbc")).
-  settings(commonSettings: _*).
-  enablePlugins(GenJavadocPlugin)
-
 val dataLocalfs = (project in file("storage/localfs")).
-  settings(commonSettings: _*).
-  enablePlugins(GenJavadocPlugin)
+  settings(commonSettings: _*)
 
-val dataS3 = (project in file("storage/s3")).
-  settings(commonSettings: _*).
-  enablePlugins(GenJavadocPlugin)
+//val dataS3 = (project in file("storage/s3")).
+//  settings(commonSettings: _*).
 
 val common = (project in file("common")).
   settings(commonSettings: _*).
-  enablePlugins(GenJavadocPlugin).
   disablePlugins(sbtassembly.AssemblyPlugin)
 
 val data = (project in file("data")).
   dependsOn(common).
   settings(commonSettings: _*).
   settings(commonTestSettings: _*).
-  enablePlugins(GenJavadocPlugin).
   disablePlugins(sbtassembly.AssemblyPlugin)
 
 val core = (project in file("core")).
   dependsOn(data).
   settings(commonSettings: _*).
   settings(commonTestSettings: _*).
-  enablePlugins(GenJavadocPlugin).
   enablePlugins(BuildInfoPlugin).
   settings(
     buildInfoKeys := Seq[BuildInfoKey](
@@ -147,7 +135,6 @@ val core = (project in file("core")).
 val e2 = (project in file("e2")).
   dependsOn(core).
   settings(commonSettings: _*).
-  enablePlugins(GenJavadocPlugin).
   disablePlugins(sbtassembly.AssemblyPlugin)
 
 val tools = (project in file("tools")).
@@ -155,16 +142,16 @@ val tools = (project in file("tools")).
   settings(commonSettings: _*).
   settings(commonTestSettings: _*).
   settings(skip in publish := true).
-  enablePlugins(GenJavadocPlugin).
   enablePlugins(SbtTwirl)
 
 val storageProjectReference = Seq(
-    dataElasticsearch,
-    dataHbase,
-    dataHdfs,
+//    dataElasticsearch,
+//    dataHbase,
+//    dataHdfs,
     dataJdbc,
     dataLocalfs,
-    dataS3) map Project.projectToRef
+//    dataS3
+) map Project.projectToRef
 
 val storage = (project in file("storage"))
   .settings(skip in publish := true)
@@ -176,81 +163,8 @@ val assembly = (project in file("assembly")).
 
 val root = (project in file(".")).
   settings(commonSettings: _*).
-  enablePlugins(ScalaUnidocPlugin).
-  settings(
-    unidocProjectFilter in (ScalaUnidoc, unidoc) := inAnyProject -- inProjects(storageProjectReference: _*),
-    unidocProjectFilter in (JavaUnidoc, unidoc) := inAnyProject -- inProjects(storageProjectReference: _*),
-    scalacOptions in (ScalaUnidoc, unidoc) ++= Seq(
-      "-groups",
-      "-skip-packages",
-      Seq(
-        "akka",
-        "org.apache.predictionio.annotation",
-        "org.apache.predictionio.authentication",
-        "org.apache.predictionio.configuration",
-        "org.apache.predictionio.controller.html",
-        "org.apache.predictionio.controller.java",
-        "org.apache.predictionio.data.api",
-        "org.apache.predictionio.data.storage.*",
-        "org.apache.predictionio.data.view",
-        "org.apache.predictionio.data.webhooks",
-        "org.apache.predictionio.tools",
-        "org.apache.predictionio.workflow.html",
-        "scalikejdbc").mkString(":"),
-      "-doc-title",
-      "PredictionIO Scala API",
-      "-doc-version",
-      version.value,
-      "-doc-root-content",
-      "docs/scaladoc/rootdoc.txt")).
-  settings(
-    javacOptions in (JavaUnidoc, unidoc) := Seq(
-      "-subpackages",
-      "org.apache.predictionio",
-      "-exclude",
-      Seq(
-        "org.apache.predictionio.controller.html",
-        "org.apache.predictionio.data.api",
-        "org.apache.predictionio.data.view",
-        "org.apache.predictionio.data.webhooks.*",
-        "org.apache.predictionio.workflow",
-        "org.apache.predictionio.tools",
-        "org.apache.hadoop").mkString(":"),
-      "-windowtitle",
-      "PredictionIO Javadoc " + version.value,
-      "-group",
-      "Java Controllers",
-      Seq(
-        "org.apache.predictionio.controller.java",
-        "org.apache.predictionio.data.store.java").mkString(":"),
-      "-group",
-      "Scala Base Classes",
-      Seq(
-        "org.apache.predictionio.controller",
-        "org.apache.predictionio.core",
-        "org.apache.predictionio.data.storage",
-        "org.apache.predictionio.data.storage.*",
-        "org.apache.predictionio.data.store").mkString(":"),
-      "-overview",
-      "docs/javadoc/javadoc-overview.html",
-      "-noqualifier",
-      "java.lang")).
   aggregate(common, core, data, tools, e2).
   disablePlugins(sbtassembly.AssemblyPlugin)
-
-val pioUnidoc = taskKey[Unit]("Builds PredictionIO ScalaDoc")
-
-pioUnidoc := {
-  (unidoc in Compile).value
-  val log = streams.value.log
-  log.info("Adding custom styling.")
-  IO.append(
-    crossTarget.value / "unidoc" / "lib" / "template.css",
-    IO.read(baseDirectory.value / "docs" / "scaladoc" / "api-docs.css"))
-  IO.append(
-    crossTarget.value / "unidoc" / "lib" / "template.js",
-    IO.read(baseDirectory.value / "docs" / "scaladoc" / "api-docs.js"))
-}
 
 homepage := Some(url("http://predictionio.apache.org"))
 

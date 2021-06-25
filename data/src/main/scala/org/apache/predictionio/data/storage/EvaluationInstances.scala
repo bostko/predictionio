@@ -18,9 +18,10 @@
 
 package org.apache.predictionio.data.storage
 
-import com.github.nscala_time.time.Imports._
 import org.apache.predictionio.annotation.DeveloperApi
 import org.json4s._
+
+import java.time.Instant
 
 /** :: DeveloperApi ::
   * Stores meta information for each evaluation instance.
@@ -42,8 +43,8 @@ import org.json4s._
 case class EvaluationInstance(
   id: String = "",
   status: String = "",
-  startTime: DateTime = DateTime.now,
-  endTime: DateTime = DateTime.now,
+  startTime: Instant = Instant.now,
+  endTime: Instant = Instant.now,
   evaluationClass: String = "",
   engineParamsGeneratorClass: String = "",
   batch: String = "",
@@ -95,9 +96,9 @@ class EvaluationInstanceSerializer extends CustomSerializer[EvaluationInstance](
           case JField("id", JString(id)) => i.copy(id = id)
           case JField("status", JString(status)) => i.copy(status = status)
           case JField("startTime", JString(startTime)) =>
-            i.copy(startTime = Utils.stringToDateTime(startTime))
+            i.copy(startTime = Utils.stringToInstant(startTime))
           case JField("endTime", JString(endTime)) =>
-            i.copy(endTime = Utils.stringToDateTime(endTime))
+            i.copy(endTime = Utils.stringToInstant(endTime))
           case JField("evaluationClass", JString(evaluationClass)) =>
             i.copy(evaluationClass = evaluationClass)
           case JField("engineParamsGeneratorClass", JString(engineParamsGeneratorClass)) =>

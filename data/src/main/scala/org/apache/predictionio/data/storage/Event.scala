@@ -19,8 +19,8 @@
 package org.apache.predictionio.data.storage
 
 import org.apache.predictionio.annotation.DeveloperApi
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
+
+import java.time.Instant
 
 /** Each event in the Event Store can be represented by fields in this case
   * class.
@@ -47,10 +47,10 @@ case class Event(
   val targetEntityType: Option[String] = None,
   val targetEntityId: Option[String] = None,
   val properties: DataMap = DataMap(), // default empty
-  val eventTime: DateTime = DateTime.now,
+  val eventTime: Instant = Instant.now,
   val tags: Seq[String] = Nil,
   val prId: Option[String] = None,
-  val creationTime: DateTime = DateTime.now
+  val creationTime: Instant = Instant.now
 ) {
   override def toString(): String = {
     s"Event(id=$eventId,event=$event,eType=$entityType,eId=$entityId," +
@@ -67,7 +67,6 @@ case class Event(
 @DeveloperApi
 object EventValidation {
   /** Default time zone is set to UTC */
-  val defaultTimeZone = DateTimeZone.UTC
 
   /** Checks whether an event name contains a reserved prefix
     *

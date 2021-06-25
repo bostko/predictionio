@@ -22,9 +22,9 @@ name := "apache-predictionio-common"
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor"           % akkaVersion.value,
   "com.typesafe.akka" %% "akka-slf4j"           % akkaVersion.value,
-  "com.typesafe.akka" %% "akka-http"            % "10.1.5",
+  "com.typesafe.akka" %% "akka-http"            % "10.0.15",
   "org.json4s"        %% "json4s-native"        % json4sVersion.value,
-  "com.typesafe.akka" %% "akka-stream"          % "2.5.12"
+  "com.typesafe.akka" %% "akka-stream"          % "2.6.8"
 )
 
 pomExtra := childrenPomExtra.value

@@ -151,8 +151,8 @@ class JDBCEvaluationInstances(client: String, config: StorageClientConfig, prefi
     EvaluationInstance(
       id = rs.string("id"),
       status = rs.string("status"),
-      startTime = rs.jodaDateTime("startTime"),
-      endTime = rs.jodaDateTime("endTime"),
+      startTime = rs.timestamp("startTime").toInstant,
+      endTime = rs.timestamp("endTime").toInstant,
       evaluationClass = rs.string("evaluationClass"),
       engineParamsGeneratorClass = rs.string("engineParamsGeneratorClass"),
       batch = rs.string("batch"),

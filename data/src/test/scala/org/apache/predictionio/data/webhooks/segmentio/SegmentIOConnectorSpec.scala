@@ -92,7 +92,6 @@ class SegmentIOConnectorSpec extends Specification with ConnectorTestUtil {
           |      "height": 568,
           |      "density": 2
           |    },
-          |    "timezone": "Europe/Amsterdam",
           |    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5)"
           |  }
         """.stripMargin

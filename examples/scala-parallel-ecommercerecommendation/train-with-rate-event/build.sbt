@@ -18,7 +18,7 @@
 name := "template-scala-parallel-ecommercerecommendation"
 
 organization := "org.apache.predictionio"
-scalaVersion := "2.11.12"
+scalaVersion := "2.12.6"
 libraryDependencies ++= Seq(
-  "org.apache.predictionio" %% "apache-predictionio-core" % "0.14.0" % "provided",
-  "org.apache.spark"        %% "spark-mllib"              % "2.4.0" % "provided")
+  "org.apache.predictionio" %% "apache-predictionio-core" % "0.16.0" % "provided",
+  "org.apache.spark"        %% "spark-mllib"              % "3.0.3" % "provided")

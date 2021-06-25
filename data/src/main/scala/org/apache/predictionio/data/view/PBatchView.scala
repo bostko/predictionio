@@ -21,7 +21,7 @@ package org.apache.predictionio.data.view
 import org.apache.predictionio.data.storage.{DataMap, Event, EventValidation, Storage}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.joda.time.DateTime
+import java.time.Instant
 import org.json4s.JValue
 
 
@@ -130,7 +130,7 @@ private[predictionio] case class EventOp (
 
 private[predictionio] object EventOp {
   def apply(e: Event): EventOp = {
-    val t = e.eventTime.getMillis
+    val t = e.eventTime.toEpochMilli
     e.event match {
       case "$set" => {
         val fields = e.properties.fields.mapValues(jv =>
@@ -162,8 +162,8 @@ private[predictionio] object EventOp {
 @deprecated("Use PEvents or PEventStore instead.", "0.9.2")
 class PBatchView(
   val appId: Int,
-  val startTime: Option[DateTime],
-  val untilTime: Option[DateTime],
+  val startTime: Option[Instant],
+  val untilTime: Option[Instant],
   val sc: SparkContext) {
 
   // NOTE: parallel Events DB interface
@@ -182,8 +182,8 @@ class PBatchView(
 
   def aggregateProperties(
     entityType: String,
-    startTimeOpt: Option[DateTime] = None,
-    untilTimeOpt: Option[DateTime] = None
+    startTimeOpt: Option[Instant] = None,
+    untilTimeOpt: Option[Instant] = None
   ): RDD[(String, DataMap)] = {
 
     _events

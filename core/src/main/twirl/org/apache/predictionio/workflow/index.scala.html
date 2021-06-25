@@ -1,7 +1,6 @@
 @import org.apache.predictionio.data.storage.EngineInstance
 @import org.apache.predictionio.workflow.ServerConfig
-@import org.joda.time.DateTime
-@import org.joda.time.format.DateTimeFormat
+@import _root_.java.time.Instant
 @(args: ServerConfig,
   engineInstance: EngineInstance,
   algorithms: Seq[String],
@@ -10,7 +9,7 @@
   dataSourceParams: String,
   preparatorParams: String,
   servingParams: String,
-  serverStartTime: DateTime,
+  serverStartTime: Instant,
   feedback: Boolean,
   eventServerIp: String,
   eventServerPort: Int,
@@ -51,14 +50,14 @@
       </div>
       <h2>Engine Information</h2>
       <table class="table table-bordered table-striped">
-        <tr><th>Training Start Time</th><td>@{DateTimeFormat.forStyle("FF").print(engineInstance.startTime)}</td></tr>
-        <tr><th>Training End Time</th><td>@{DateTimeFormat.forStyle("FF").print(engineInstance.endTime)}</td></tr>
+        <tr><th>Training Start Time</th><td>@{engineInstance.startTime}</td></tr>
+        <tr><th>Training End Time</th><td>@{engineInstance.endTime}</td></tr>
         <tr><th>Variant ID</th><td>@{engineInstance.engineVariant}</td></tr>
         <tr><th>Instance ID</th><td>@{engineInstance.id}</td></tr>
       </table>
       <h2>Server Information</h2>
       <table class="table table-bordered table-striped">
-        <tr><th>Start Time</th><td>@{DateTimeFormat.forStyle("FF").print(serverStartTime)}</td></tr>
+        <tr><th>Start Time</th><td>@{serverStartTime}</td></tr>
         <tr><th>Request Count</th><td>@{requestCount}</td></tr>
         <tr><th>Average Serving Time</th><td>@{f"${avgServingSec}%.4f"} seconds</td></tr>
         <tr><th>Last Serving Time</th><td>@{f"${lastServingSec}%.4f"} seconds</td></tr>

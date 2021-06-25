@@ -37,9 +37,6 @@ import org.json4s.DefaultFormats
 import org.json4s.JObject
 import org.json4s.native.Serialization.{ read, write }
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-
 import org.apache.commons.codec.binary.Base64
 import java.security.MessageDigest
 
@@ -68,9 +65,7 @@ object HBEventsUtil {
     "properties" -> "p",
     "prId" -> "prid",
     "eventTime" -> "et",
-    "eventTimeZone" -> "etz",
     "creationTime" -> "ct",
-    "creationTimeZone" -> "ctz"
   ).mapValues(Bytes.toBytes(_))
 
   def hash(entityType: String, entityId: String): Array[Byte] = {
@@ -192,16 +187,8 @@ object HBEventsUtil {
     }
 
     addLongToE(colNames("eventTime"), event.eventTime.getMillis)
-    val eventTimeZone = event.eventTime.getZone
-    if (!eventTimeZone.equals(EventValidation.defaultTimeZone)) {
-      addStringToE(colNames("eventTimeZone"), eventTimeZone.getID)
-    }
 
     addLongToE(colNames("creationTime"), event.creationTime.getMillis)
-    val creationTimeZone = event.creationTime.getZone
-    if (!creationTimeZone.equals(EventValidation.defaultTimeZone)) {
-      addStringToE(colNames("creationTimeZone"), creationTimeZone.getID)
-    }
 
     // can use zero-length byte array for tag cell value
     (put, rowKey)
@@ -254,15 +241,9 @@ object HBEventsUtil {
     val properties: DataMap = getOptStringCol("properties")
       .map(s => DataMap(read[JObject](s))).getOrElse(DataMap())
     val prId = getOptStringCol("prId")
-    val eventTimeZone = getOptStringCol("eventTimeZone")
-      .map(DateTimeZone.forID(_))
-      .getOrElse(EventValidation.defaultTimeZone)
-    val eventTime = new DateTime(
-      getLongCol("eventTime"), eventTimeZone)
-    val creationTimeZone = getOptStringCol("creationTimeZone")
-      .map(DateTimeZone.forID(_))
-      .getOrElse(EventValidation.defaultTimeZone)
-    val creationTime: DateTime = new DateTime(
+    val eventTime = new Instant(
+      getLongCol("eventTime"))
+    val creationTime: Instant = new Instant(
       getLongCol("creationTime"), creationTimeZone)
 
     Event(
@@ -286,8 +267,8 @@ object HBEventsUtil {
   //    Some(None) means not exist.
   //    Some(Some(x)) means it should match x
   def createScan(
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,

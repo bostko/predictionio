@@ -21,13 +21,9 @@ package org.apache.predictionio.data.webhooks.mailchimp
 
 import org.apache.predictionio.data.webhooks.FormConnector
 import org.apache.predictionio.data.webhooks.ConnectorException
-import org.apache.predictionio.data.storage.EventValidation
 import org.apache.predictionio.data.Utils
 
 import org.json4s.JObject
-
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 private[predictionio] object MailChimpConnector extends FormConnector {
 
@@ -55,14 +51,6 @@ private[predictionio] object MailChimpConnector extends FormConnector {
     json
   }
 
-
-  val mailChimpDateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
-    .withZone(EventValidation.defaultTimeZone)
-
-  def parseMailChimpDateTime(s: String): DateTime = {
-    mailChimpDateTimeFormat.parseDateTime(s)
-  }
-
   def subscribeToEventJson(data: Map[String, String]): JObject = {
 
     import org.json4s.JsonDSL._
@@ -83,7 +71,7 @@ private[predictionio] object MailChimpConnector extends FormConnector {
     */
 
     // convert to ISO8601 format
-    val eventTime = Utils.dateTimeToString(parseMailChimpDateTime(data("fired_at")))
+    val eventTime = data("fired_at")
 
     // TODO: handle optional fields
     val json =
@@ -135,7 +123,7 @@ private[predictionio] object MailChimpConnector extends FormConnector {
     */
 
     // convert to ISO8601 format
-    val eventTime = Utils.dateTimeToString(parseMailChimpDateTime(data("fired_at")))
+    val eventTime = data("fired_at")
 
     val json =
       ("event" -> "unsubscribe") ~
@@ -182,7 +170,7 @@ private[predictionio] object MailChimpConnector extends FormConnector {
     */
 
     // convert to ISO8601 format
-    val eventTime = Utils.dateTimeToString(parseMailChimpDateTime(data("fired_at")))
+    val eventTime = data("fired_at")
 
     val json =
       ("event" -> "profile") ~
@@ -221,7 +209,7 @@ private[predictionio] object MailChimpConnector extends FormConnector {
     */
 
     // convert to ISO8601 format
-    val eventTime = Utils.dateTimeToString(parseMailChimpDateTime(data("fired_at")))
+    val eventTime = data("fired_at")
 
     val json =
       ("event" -> "upemail") ~
@@ -254,7 +242,7 @@ private[predictionio] object MailChimpConnector extends FormConnector {
     */
 
     // convert to ISO8601 format
-    val eventTime = Utils.dateTimeToString(parseMailChimpDateTime(data("fired_at")))
+    val eventTime = data("fired_at")
 
     val json =
       ("event" -> "cleaned") ~
@@ -286,7 +274,7 @@ private[predictionio] object MailChimpConnector extends FormConnector {
     */
 
     // convert to ISO8601 format
-    val eventTime = Utils.dateTimeToString(parseMailChimpDateTime(data("fired_at")))
+    val eventTime = data("fired_at")
 
     val json =
       ("event" -> "campaign") ~

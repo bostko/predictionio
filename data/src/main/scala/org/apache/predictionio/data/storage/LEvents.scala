@@ -27,7 +27,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext
 import scala.concurrent.TimeoutException
 
-import org.joda.time.DateTime
+import java.time.Instant
 
 /** :: DeveloperApi ::
   * Base trait of a data access object that directly returns [[Event]] without
@@ -188,8 +188,8 @@ trait LEvents {
   def futureFind(
       appId: Int,
       channelId: Option[Int] = None,
-      startTime: Option[DateTime] = None,
-      untilTime: Option[DateTime] = None,
+      startTime: Option[Instant] = None,
+      untilTime: Option[Instant] = None,
       entityType: Option[String] = None,
       entityId: Option[String] = None,
       eventNames: Option[Seq[String]] = None,
@@ -216,8 +216,8 @@ trait LEvents {
     appId: Int,
     channelId: Option[Int] = None,
     entityType: String,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     required: Option[Seq[String]] = None)(implicit ec: ExecutionContext):
     Future[Map[String, PropertyMap]] = {
       futureFind(
@@ -260,8 +260,8 @@ trait LEvents {
     channelId: Option[Int] = None,
     entityType: String,
     entityId: String,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None)(implicit ec: ExecutionContext):
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None)(implicit ec: ExecutionContext):
     Future[Option[PropertyMap]] = {
       futureFind(
         appId = appId,
@@ -326,8 +326,8 @@ trait LEvents {
   private[predictionio] def find(
     appId: Int,
     channelId: Option[Int] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,
@@ -356,8 +356,8 @@ trait LEvents {
   private[predictionio] def findLegacy(
     appId: Int,
     channelId: Option[Int] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,
@@ -419,8 +419,8 @@ trait LEvents {
     eventNames: Option[Seq[String]] = None,
     targetEntityType: Option[Option[String]] = None,
     targetEntityId: Option[Option[String]] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     limit: Option[Int] = None,
     latest: Boolean = true,
     timeout: Duration = defaultTimeout)(implicit ec: ExecutionContext):
@@ -459,8 +459,8 @@ trait LEvents {
     appId: Int,
     channelId: Option[Int] = None,
     entityType: String,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     required: Option[Seq[String]] = None,
     timeout: Duration = defaultTimeout)(implicit ec: ExecutionContext):
     Map[String, PropertyMap] = {
@@ -496,8 +496,8 @@ trait LEvents {
     channelId: Option[Int] = None,
     entityType: String,
     entityId: String,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     timeout: Duration = defaultTimeout)(implicit ec: ExecutionContext):
     Option[PropertyMap] = {
 

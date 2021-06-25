@@ -36,3 +36,4 @@ tests/docker-files/*.jar
 tests/docker-files/*.tgz
 assembly/*.jar
 assembly/src/universal/
+/.bsp

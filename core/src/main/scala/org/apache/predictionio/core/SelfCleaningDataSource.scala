@@ -23,7 +23,7 @@ import org.apache.predictionio.data.storage.{DataMap, Event,Storage}
 import org.apache.predictionio.data.store.{Common, LEventStore, PEventStore}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.joda.time.DateTime
+import java.time.Instant
 import org.json4s._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,8 +41,8 @@ import scala.concurrent.duration.Duration
 @DeveloperApi
 trait SelfCleaningDataSource {
 
-  implicit object DateTimeOrdering extends Ordering[DateTime] {
-    def compare(d1: DateTime, d2: DateTime): Int = d2.compareTo(d1)
+  implicit object InstantOrdering extends Ordering[Instant] {
+    def compare(d1: Instant, d2: Instant): Int = d2.compareTo(d1)
   }
 
 
@@ -79,8 +79,9 @@ trait SelfCleaningDataSource {
       .flatMap(_.duration)
       .map { duration =>
         val fd = Duration(duration)
-        pEvents.filter(e =>
-          e.eventTime.isAfter(DateTime.now().minus(fd.toMillis)) || isSetEvent(e)
+        pEvents.filter(e => true
+          // TODO
+//          e.eventTime.isAfter(Instant.now().minus(fd)) || isSetEvent(e)
         )
       }.getOrElse(pEvents)
   }
@@ -98,7 +99,9 @@ trait SelfCleaningDataSource {
       .map { duration =>
         val fd = Duration(duration)
         lEvents.filter(e =>
-          e.eventTime.isAfter(DateTime.now().minus(fd.toMillis)) || isSetEvent(e)
+          true
+          // TODO
+//          e.eventTime.isAfter(Instant.now().minus(fd)) || isSetEvent(e)
         )
       }.getOrElse(lEvents)
   }
@@ -125,7 +128,7 @@ trait SelfCleaningDataSource {
   }
 
   def removePDuplicates(sc: SparkContext, rdd: RDD[Event]): RDD[Event] = {
-    val now = DateTime.now()
+    val now = Instant.now()
     rdd.sortBy(_.eventTime, true).map(x =>
       (recreateEvent(x, None, now), (x.eventId, x.eventTime)))
       .groupByKey
@@ -133,7 +136,7 @@ trait SelfCleaningDataSource {
 
   }
 
-  def recreateEvent(x: Event, eventId: Option[String], creationTime: DateTime): Event = {
+  def recreateEvent(x: Event, eventId: Option[String], creationTime: Instant): Event = {
     Event(eventId = eventId, event = x.event, entityType = x.entityType,
       entityId = x.entityId, targetEntityType = x.targetEntityType,
       targetEntityId = x.targetEntityId, properties = x.properties,
@@ -142,7 +145,7 @@ trait SelfCleaningDataSource {
   }
 
   def removeLDuplicates(ls: Iterable[Event]): Iterable[Event] = {
-    val now = DateTime.now()
+    val now = Instant.now()
     ls.toList.reverse.map(x =>
       (recreateEvent(x, None, now), (x.eventId, x.eventTime)))
       .groupBy(_._1).mapValues( _.map( _._2 ) )

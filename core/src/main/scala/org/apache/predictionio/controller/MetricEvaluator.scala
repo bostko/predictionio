@@ -20,8 +20,8 @@ package org.apache.predictionio.controller
 
 import _root_.java.io.File
 import _root_.java.io.PrintWriter
+import _root_.java.time.Instant
 
-import com.github.nscala_time.time.Imports.DateTime
 import grizzled.slf4j.Logger
 import org.apache.predictionio.annotation.DeveloperApi
 import org.apache.predictionio.core.BaseEvaluator
@@ -195,7 +195,7 @@ class MetricEvaluator[EI, Q, P, A, R] (
     engineParams: EngineParams,
     outputPath: String) {
 
-    val now = DateTime.now
+    val now = Instant.now
     val evalClassName = evaluation.getClass.getName
 
     val variant = MetricEvaluator.EngineVariant(

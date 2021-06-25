@@ -50,8 +50,8 @@ object Workflow {
     val engineInstance = EngineInstance(
       id = "",
       status = "INIT",
-      startTime = DateTime.now,
-      endTime = DateTime.now,
+      startTime = Instant.now,
+      endTime = Instant.now,
       engineId = "",
       engineVersion = "",
       engineVariant = "",

@@ -18,8 +18,7 @@
 
 package org.apache.predictionio.data.storage
 
-import org.joda.time.DateTime
-import org.joda.time.format.ISODateTimeFormat
+import java.time.Instant
 
 /** Backend-agnostic storage utilities. */
 private[predictionio] object Utils {
@@ -43,6 +42,6 @@ private[predictionio] object Utils {
     */
   def idWithAppid(appid: Int, id: String): String = appid + "_" + id
 
-  def stringToDateTime(dt: String): DateTime =
-    ISODateTimeFormat.dateTimeParser.parseDateTime(dt)
+  def stringToInstant(dt: String): Instant =
+    Instant.parse(dt)
 }

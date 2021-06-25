@@ -28,7 +28,7 @@ import org.apache.hadoop.hbase.HTableDescriptor
 import org.apache.hadoop.hbase.NamespaceDescriptor
 import org.apache.hadoop.hbase.TableName
 import org.apache.hadoop.hbase.client._
-import org.joda.time.DateTime
+import java.time.Instant
 
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext
@@ -162,8 +162,8 @@ class HBLEvents(val client: HBClient, config: StorageClientConfig, val namespace
   def futureFind(
     appId: Int,
     channelId: Option[Int] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,

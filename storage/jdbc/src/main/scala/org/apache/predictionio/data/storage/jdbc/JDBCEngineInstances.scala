@@ -180,8 +180,9 @@ class JDBCEngineInstances(client: String, config: StorageClientConfig, prefix: S
     EngineInstance(
       id = rs.string("id"),
       status = rs.string("status"),
-      startTime = rs.jodaDateTime("startTime"),
-      endTime = rs.jodaDateTime("endTime"),
+      // NPE?
+      startTime = rs.timestamp("startTime").toInstant,
+      endTime = rs.timestamp("endTime").toInstant,
       engineId = rs.string("engineId"),
       engineVersion = rs.string("engineVersion"),
       engineVariant = rs.string("engineVariant"),

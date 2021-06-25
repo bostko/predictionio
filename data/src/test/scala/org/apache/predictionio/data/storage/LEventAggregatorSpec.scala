@@ -23,7 +23,7 @@ import org.specs2.mutable._
 import org.json4s.JObject
 import org.json4s.native.JsonMethods.parse
 
-import org.joda.time.DateTime
+import java.time.Instant
 
 class LEventAggregatorSpec extends Specification with TestEvents {
 

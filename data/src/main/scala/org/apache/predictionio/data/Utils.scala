@@ -18,36 +18,22 @@
 
 package org.apache.predictionio.data
 
-import org.joda.time.DateTime
-import org.joda.time.format.ISODateTimeFormat
-
-import java.lang.IllegalArgumentException
+import java.time.Instant
 
 private[predictionio] object Utils {
 
-  // use dateTime() for strict ISO8601 format
-  val dateTimeFormatter = ISODateTimeFormat.dateTime().withOffsetParsed()
+  // use Instant() for strict ISO8601 format
 
-  val dateTimeNoMillisFormatter =
-    ISODateTimeFormat.dateTimeNoMillis().withOffsetParsed()
-
-  def stringToDateTime(dt: String): DateTime = {
+  def stringToInstant(dt: String): Instant = {
     // We accept two formats.
     // 1. "yyyy-MM-dd'T'HH:mm:ss.SSSZZ"
     // 2. "yyyy-MM-dd'T'HH:mm:ssZZ"
     // The first one also takes milliseconds into account.
-    try {
       // formatting for "yyyy-MM-dd'T'HH:mm:ss.SSSZZ"
-      dateTimeFormatter.parseDateTime(dt)
-    } catch {
-      case e: IllegalArgumentException => {
-        // handle when the datetime string doesn't specify milliseconds.
-        dateTimeNoMillisFormatter.parseDateTime(dt)
-      }
-    }
+    Instant.parse(dt)
   }
 
-  def dateTimeToString(dt: DateTime): String = dateTimeFormatter.print(dt)
+  def InstantToString(dt: Instant): String = dt.toString
     // dt.toString
 
 }

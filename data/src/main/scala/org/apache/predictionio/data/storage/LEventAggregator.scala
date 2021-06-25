@@ -19,7 +19,7 @@
 package org.apache.predictionio.data.storage
 
 import org.apache.predictionio.annotation.DeveloperApi
-import org.joda.time.DateTime
+import java.time.Instant
 
 /** :: DeveloperApi ::
   * Provides aggregation support of [[Event]]s to [[LEvents]]. Engine developers
@@ -42,7 +42,7 @@ object LEventAggregator {
   def aggregateProperties(events: Iterator[Event]): Map[String, PropertyMap] = {
     events.toList
       .groupBy(_.entityId)
-      .mapValues(_.sortBy(_.eventTime.getMillis)
+      .mapValues(_.sortBy(_.eventTime.toEpochMilli)
         .foldLeft[Prop](Prop())(propAggregator))
       .filter{ case (k, v) => v.dm.isDefined }
       .mapValues{ v =>
@@ -70,7 +70,7 @@ object LEventAggregator {
   def aggregatePropertiesSingle(events: Iterator[Event])
   : Option[PropertyMap] = {
     val prop = events.toList
-      .sortBy(_.eventTime.getMillis)
+      .sortBy(_.eventTime.toEpochMilli)
       .foldLeft[Prop](Prop())(propAggregator)
 
     prop.dm.map{ d =>
@@ -135,14 +135,14 @@ object LEventAggregator {
   }
 
   private
-  def first(a: DateTime, b: DateTime): DateTime = if (b.isBefore(a)) b else a
+  def first(a: Instant, b: Instant): Instant = if (b.isBefore(a)) b else a
 
   private
-  def last(a: DateTime, b: DateTime): DateTime = if (b.isAfter(a)) b else a
+  def last(a: Instant, b: Instant): Instant = if (b.isAfter(a)) b else a
 
   private case class Prop(
     dm: Option[DataMap] = None,
-    firstUpdated: Option[DateTime] = None,
-    lastUpdated: Option[DateTime] = None
+    firstUpdated: Option[Instant] = None,
+    lastUpdated: Option[Instant] = None
   )
 }

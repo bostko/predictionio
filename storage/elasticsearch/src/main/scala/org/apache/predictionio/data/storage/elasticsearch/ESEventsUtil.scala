@@ -29,7 +29,6 @@ import org.apache.hadoop.io.MapWritable
 import org.apache.hadoop.io.Text
 import org.apache.predictionio.data.storage.DataMap
 import org.apache.predictionio.data.storage.Event
-import org.joda.time.DateTime
 import org.json4s._
 import org.json4s.native.Serialization.read
 import org.json4s.native.Serialization.write
@@ -66,8 +65,8 @@ object ESEventsUtil {
     val targetEntityType = getOptStringCol("targetEntityType")
     val targetEntityId = getOptStringCol("targetEntityId")
     val prId = getOptStringCol("prId")
-    val eventTime: DateTime = ESUtils.parseUTCDateTime(getStringCol("eventTime"))
-    val creationTime: DateTime = ESUtils.parseUTCDateTime(getStringCol("creationTime"))
+    val eventTime: Instant = Instant.pase(getStringCol("eventTime"))
+    val creationTime: Instant = Instant.pase(getStringCol("creationTime"))
 
     Event(
       eventId = eventId,
@@ -93,10 +92,10 @@ object ESEventsUtil {
       "targetEntityType" -> event.targetEntityType,
       "targetEntityId" -> event.targetEntityId,
       "properties" -> write(event.properties.toJObject),
-      "eventTime" -> ESUtils.formatUTCDateTime(event.eventTime),
+      "eventTime" -> ESUtils.formatUTCInstant(event.eventTime),
       "tags" -> event.tags,
       "prId" -> event.prId,
-      "creationTime" -> ESUtils.formatUTCDateTime(event.creationTime)
+      "creationTime" -> ESUtils.formatUTCInstant(event.creationTime)
     )
   }
 

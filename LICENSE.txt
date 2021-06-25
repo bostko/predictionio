@@ -408,7 +408,7 @@ Binary distribution bundles
   com.sun.jersey # jersey-json # 1.9 (https://github.com/jersey/jersey-1.x)
   com.sun.jersey # jersey-server # 1.9 (https://github.com/jersey/jersey-1.x)
   javax.xml.bind # jaxb-api # 2.2.2
-  com.sun.xml.bind # jaxb-impl # 2.2.3-1
+  com.sun.xml.bind # jaxb-impl # 3.0.3-1
 
   which are available under the CDDL v1.1 license (https://glassfish.java.net/public/CDDL+GPL_1_1.html)
   
@@ -1700,10 +1700,10 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 Binary distribution bundles
 
-  org.scala-lang # scala-library # 2.11.12 (http://scala-lang.org/)
-  org.scala-lang # scala-compiler # 2.11.12 (http://scala-lang.org/)
-  org.scala-lang # scala-reflect # 2.11.12 (http://scala-lang.org/)
-  org.scala-lang # scalap # 2.11.12 (http://scala-lang.org/)
+  org.scala-lang # scala-library # 2.12.6 (http://scala-lang.org/)
+  org.scala-lang # scala-compiler # 2.12.6 (http://scala-lang.org/)
+  org.scala-lang # scala-reflect # 2.12.6 (http://scala-lang.org/)
+  org.scala-lang # scalap # 2.12.6 (http://scala-lang.org/)
   org.scala-lang.modules # scala-java8-compat_2.11 # 0.7.0 (http://scala-lang.org/)
   org.scala-lang.modules # scala-parser-combinators_2.11 # 1.0.6 (http://scala-lang.org/)
   org.scala-lang.modules # scala-parser-combinators_2.11 # 1.1.0 (http://scala-lang.org/)

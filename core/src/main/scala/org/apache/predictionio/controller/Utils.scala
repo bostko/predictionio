@@ -21,7 +21,6 @@ package org.apache.predictionio.controller
 import org.apache.predictionio.workflow.KryoInstantiator
 
 import org.json4s._
-import org.json4s.ext.JodaTimeSerializers
 
 import scala.io.Source
 
@@ -34,7 +33,7 @@ import _root_.java.io.FileOutputStream
   */
 object Utils {
   /** Default JSON4S serializers for PredictionIO controllers. */
-  val json4sDefaultFormats = DefaultFormats.lossless ++ JodaTimeSerializers.all
+  val json4sDefaultFormats = DefaultFormats.lossless
 
   /** Save a model object as a file to a temporary location on local filesystem.
     * It will first try to use the location indicated by the environmental

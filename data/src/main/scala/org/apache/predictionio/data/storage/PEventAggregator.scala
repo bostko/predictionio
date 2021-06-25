@@ -18,7 +18,7 @@
 
 package org.apache.predictionio.data.storage
 
-import org.joda.time.DateTime
+import java.time.Instant
 
 import org.json4s.JValue
 
@@ -89,16 +89,16 @@ private[predictionio] case class EventOp (
   val setProp: Option[SetProp] = None,
   val unsetProp: Option[UnsetProp] = None,
   val deleteEntity: Option[DeleteEntity] = None,
-  val firstUpdated: Option[DateTime] = None,
-  val lastUpdated: Option[DateTime] = None
+  val firstUpdated: Option[Instant] = None,
+  val lastUpdated: Option[Instant] = None
 ) extends Serializable {
 
   def ++ (that: EventOp): EventOp = {
     val firstUp = (this.firstUpdated ++ that.firstUpdated).reduceOption{
-      (a, b) => if (b.getMillis < a.getMillis) b else a
+      (a, b) => if (b.toEpochMilli < a.toEpochMilli) b else a
     }
     val lastUp = (this.lastUpdated ++ that.lastUpdated).reduceOption {
-      (a, b) => if (b.getMillis > a.getMillis) b else a
+      (a, b) => if (b.toEpochMilli > a.toEpochMilli) b else a
     }
 
     EventOp(
@@ -153,7 +153,7 @@ private[predictionio] case class EventOp (
 private[predictionio] object EventOp {
   // create EventOp from Event object
   def apply(e: Event): EventOp = {
-    val t = e.eventTime.getMillis
+    val t = e.eventTime.toEpochMilli
     e.event match {
       case "$set" => {
         val fields = e.properties.fields.mapValues(jv =>

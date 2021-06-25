@@ -20,11 +20,11 @@ package org.apache.predictionio.data.api
 
 import akka.http.scaladsl.model.StatusCode
 import org.apache.predictionio.data.storage.Event
-
 import akka.actor.Actor
 import akka.event.Logging
 
-import com.github.nscala_time.time.Imports.DateTime
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 /* message to StatsActor */
 case class Bookkeeping(val appId: Int, statusCode: StatusCode, event: Event)
@@ -36,17 +36,14 @@ class StatsActor extends Actor {
   implicit val system = context.system
   val log = Logging(system, this)
 
-  def getCurrent: DateTime = {
-    DateTime.now.
-      withMinuteOfHour(0).
-      withSecondOfMinute(0).
-      withMillisOfSecond(0)
+  def getCurrent: Instant = {
+    Instant.now.truncatedTo( ChronoUnit.DAYS )
   }
 
-  var longLiveStats = new Stats(DateTime.now)
+  var longLiveStats = new Stats(Instant.now)
   var hourlyStats = new Stats(getCurrent)
 
-  var prevHourlyStats = new Stats(getCurrent.minusHours(1))
+  var prevHourlyStats = new Stats(getCurrent.minus(1, ChronoUnit.HOURS))
   prevHourlyStats.cutoff(hourlyStats.startTime)
 
   def bookkeeping(appId: Int, statusCode: StatusCode, event: Event) {
@@ -67,7 +64,7 @@ class StatsActor extends Actor {
     case Bookkeeping(appId, statusCode, event) =>
       bookkeeping(appId, statusCode, event)
     case GetStats(appId) => sender() ! Map(
-      "time" -> DateTime.now,
+      "time" -> Instant.now,
       "currentHour" -> hourlyStats.get(appId),
       "prevHour" -> prevHourlyStats.get(appId),
       "longLive" -> longLiveStats.get(appId))

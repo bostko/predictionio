@@ -22,7 +22,7 @@ import java.util.concurrent.{CompletableFuture, CompletionStage, ExecutorService
 
 import org.apache.predictionio.data.storage.Event
 import org.apache.predictionio.data.store.LEventStore
-import org.joda.time.DateTime
+import java.time.Instant
 
 import scala.collection.JavaConversions
 import scala.concurrent.duration.Duration
@@ -80,8 +80,8 @@ object LJavaEventStore {
     eventNames: Option[java.util.List[String]],
     targetEntityType: Option[Option[String]],
     targetEntityId: Option[Option[String]],
-    startTime: Option[DateTime],
-    untilTime: Option[DateTime],
+    startTime: Option[Instant],
+    untilTime: Option[Instant],
     limit: Option[Integer],
     latest: Boolean,
     timeout: Duration): java.util.List[Event] = {
@@ -136,8 +136,8 @@ object LJavaEventStore {
     eventNames: Option[java.util.List[String]],
     targetEntityType: Option[Option[String]],
     targetEntityId: Option[Option[String]],
-    startTime: Option[DateTime],
-    untilTime: Option[DateTime],
+    startTime: Option[Instant],
+    untilTime: Option[Instant],
     limit: Option[Integer],
     latest: Boolean,
     executorService: ExecutorService): CompletableFuture[java.util.List[Event]] = {
@@ -194,8 +194,8 @@ object LJavaEventStore {
     eventNames: Option[java.util.List[String]],
     targetEntityType: Option[Option[String]],
     targetEntityId: Option[Option[String]],
-    startTime: Option[DateTime],
-    untilTime: Option[DateTime],
+    startTime: Option[Instant],
+    untilTime: Option[Instant],
     limit: Option[Integer],
     timeout: Duration): java.util.List[Event] = {
 
@@ -251,8 +251,8 @@ object LJavaEventStore {
     eventNames: Option[java.util.List[String]],
     targetEntityType: Option[Option[String]],
     targetEntityId: Option[Option[String]],
-    startTime: Option[DateTime],
-    untilTime: Option[DateTime],
+    startTime: Option[Instant],
+    untilTime: Option[Instant],
     limit: Option[Integer],
     executorService: ExecutorService): CompletableFuture[java.util.List[Event]] = {
 

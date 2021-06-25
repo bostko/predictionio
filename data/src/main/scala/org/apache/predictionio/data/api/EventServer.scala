@@ -38,6 +38,7 @@ import org.apache.predictionio.data.storage._
 import org.apache.predictionio.akkahttpjson4s.Json4sSupport._
 import org.json4s.{DefaultFormats, Formats, JObject}
 
+import java.time.Instant
 import scala.concurrent._
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
@@ -49,7 +50,7 @@ object Json4sProtocol {
     new BatchEventsJson4sSupport.APISerializer +
     // NOTE: don't use Json4s JodaTimeSerializers since it has issues,
     // some format not converted, or timezone not correct
-    new DateTimeJson4sSupport.Serializer
+    new InstantJson4sSupport.Serializer
 }
 
 case class EventServerConfig(
@@ -302,8 +303,8 @@ object EventServer {
                       " both entityType and entityId specified.")
 
                   val parseTime = Future {
-                    val startTime = startTimeStr.map(Utils.stringToDateTime(_))
-                    val untilTime = untilTimeStr.map(Utils.stringToDateTime(_))
+                    val startTime = startTimeStr.map(Instant.parse(_))
+                    val untilTime = untilTimeStr.map(Instant.parse(_))
                     (startTime, untilTime)
                   }
 

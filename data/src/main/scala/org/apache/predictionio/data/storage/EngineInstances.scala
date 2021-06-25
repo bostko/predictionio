@@ -18,9 +18,10 @@
 
 package org.apache.predictionio.data.storage
 
-import com.github.nscala_time.time.Imports._
 import org.apache.predictionio.annotation.DeveloperApi
 import org.json4s._
+
+import java.time.Instant
 
 /** :: DeveloperApi ::
   * Stores parameters, model, and other information for each engine instance
@@ -46,8 +47,8 @@ import org.json4s._
 case class EngineInstance(
   id: String,
   status: String,
-  startTime: DateTime,
-  endTime: DateTime,
+  startTime: Instant,
+  endTime: Instant,
   engineId: String,
   engineVersion: String,
   engineVariant: String,
@@ -111,8 +112,8 @@ class EngineInstanceSerializer
       val seed = EngineInstance(
           id = "",
           status = "",
-          startTime = DateTime.now,
-          endTime = DateTime.now,
+          startTime = Instant.now,
+          endTime = Instant.now,
           engineId = "",
           engineVersion = "",
           engineVariant = "",
@@ -129,9 +130,9 @@ class EngineInstanceSerializer
           case JField("id", JString(id)) => i.copy(id = id)
           case JField("status", JString(status)) => i.copy(status = status)
           case JField("startTime", JString(startTime)) =>
-            i.copy(startTime = Utils.stringToDateTime(startTime))
+            i.copy(startTime = Utils.stringToInstant(startTime))
           case JField("endTime", JString(endTime)) =>
-            i.copy(endTime = Utils.stringToDateTime(endTime))
+            i.copy(endTime = Utils.stringToInstant(endTime))
           case JField("engineId", JString(engineId)) =>
             i.copy(engineId = engineId)
           case JField("engineVersion", JString(engineVersion)) =>

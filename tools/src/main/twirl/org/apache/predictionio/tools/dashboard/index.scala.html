@@ -1,9 +1,8 @@
 @import org.apache.predictionio.data.storage.EvaluationInstance
 @import org.apache.predictionio.tools.dashboard.DashboardConfig
-@import org.joda.time.DateTime
-@import org.joda.time.format.DateTimeFormat
+@import _root_.java.time.Instant
 @(dc: DashboardConfig,
-  dashboardStartTime: DateTime,
+  dashboardStartTime: Instant,
   env: Map[String, String],
   completedInstances: Seq[EvaluationInstance])
 <!DOCTYPE html>
@@ -66,7 +65,7 @@
     <div class="container-fluid">
       <div class="page-header">
         <h1>PredictionIO Dashboard at @{dc.ip}:@{dc.port}</h1>
-        <p class="lead">Started on: @{DateTimeFormat.forStyle("FF").print(dashboardStartTime)}</p>
+        <p class="lead">Started on: @{dashboardStartTime}</p>
       </div>
       <h2>Completed Evaluations</h2>
       <table class="table table-bordered table-striped">
@@ -95,8 +94,8 @@
           <td>
             <span title="@{i.engineParamsGeneratorClass}"><script type="text/javascript">document.write(shorternClassName("@{i.engineParamsGeneratorClass}"));</script></span>
           </td>
-          <td>@{DateTimeFormat.forStyle("MM").print(i.startTime)}</td>
-          <td>@{DateTimeFormat.forStyle("MM").print(i.endTime)}</td>
+          <td>@{i.startTime}</td>
+          <td>@{i.endTime}</td>
           <td>@{i.batch}</td>
         </tr>
         }

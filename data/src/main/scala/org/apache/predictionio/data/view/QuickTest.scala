@@ -23,7 +23,7 @@ import org.apache.predictionio.data.storage.Storage
 import scala.concurrent.ExecutionContext.Implicits.global // TODO
 
 import grizzled.slf4j.Logger
-import org.joda.time.DateTime
+import java.time.Instant
 
 import scala.language.implicitConversions
 
@@ -70,10 +70,10 @@ object TestEventTime {
   def main(args: Array[String]) {
     val e = batchView.events.filter(
       eventOpt = Some("rate"),
-      startTimeOpt = Some(new DateTime(1998, 1, 1, 0, 0))
-      // untilTimeOpt = Some(new DateTime(1997, 1, 1, 0, 0))
+      startTimeOpt = Some(Instant.parse("1998-01-01T00:00:00Z"))
+      // untilTimeOpt = Some(new Instant(1997, 1, 1, 0, 0))
     )
-      // untilTimeOpt = Some(new DateTime(2000, 1, 1, 0, 0)))
+      // untilTimeOpt = Some(new Instant(2000, 1, 1, 0, 0)))
 
     e.foreach { println }
     println()

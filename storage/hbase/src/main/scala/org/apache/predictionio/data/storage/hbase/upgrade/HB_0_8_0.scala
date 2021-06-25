@@ -30,9 +30,6 @@ import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.TableName
 import org.apache.hadoop.hbase.util.Bytes
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-
 import org.json4s.DefaultFormats
 import org.json4s.JObject
 import org.json4s.native.Serialization.{ read, write }
@@ -69,8 +66,6 @@ object HB_0_8_0 {
     "targetEntityId" -> "teid",
     "properties" -> "p",
     "prId" -> "pk", // columna name is 'pk' in 0.8.0/0.8.1
-    "eventTimeZone" -> "etz",
-    "creationTimeZone" -> "ctz"
   ).mapValues(Bytes.toBytes(_))
 
 
@@ -165,14 +160,8 @@ object HB_0_8_0 {
     val properties: DataMap = getOptStringCol("properties")
       .map(s => DataMap(read[JObject](s))).getOrElse(DataMap())
     val prId = getOptStringCol("prId")
-    val eventTimeZone = getOptStringCol("eventTimeZone")
-      .map(DateTimeZone.forID(_))
-      .getOrElse(EventValidation.defaultTimeZone)
-    val creationTimeZone = getOptStringCol("creationTimeZone")
-      .map(DateTimeZone.forID(_))
-      .getOrElse(EventValidation.defaultTimeZone)
 
-    val creationTime: DateTime = new DateTime(
+    val creationTime: Instant = new Instant(
       getTimestamp("event"), creationTimeZone
     )
 
@@ -184,7 +173,7 @@ object HB_0_8_0 {
       targetEntityType = targetEntityType,
       targetEntityId = targetEntityId,
       properties = properties,
-      eventTime = new DateTime(rowKey.millis, eventTimeZone),
+      eventTime = new Instant(rowKey.millis, eventTimeZone),
       tags = Nil,
       prId = prId,
       creationTime = creationTime

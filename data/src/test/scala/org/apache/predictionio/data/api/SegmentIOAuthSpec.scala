@@ -22,7 +22,7 @@ import akka.http.scaladsl.model.ContentTypes
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.server.Route
 import org.apache.predictionio.data.storage._
-import org.joda.time.DateTime
+import java.time.Instant
 import org.specs2.mutable.Specification
 import java.util.Base64
 import akka.http.scaladsl.testkit.Specs2RouteTest
@@ -41,8 +41,8 @@ class SegmentIOAuthSpec extends Specification with Specs2RouteTest {
       Future successful "event_id"
 
     override def futureFind(
-      appId: Int, channelId: Option[Int], startTime: Option[DateTime],
-      untilTime: Option[DateTime], entityType: Option[String],
+      appId: Int, channelId: Option[Int], startTime: Option[Instant],
+      untilTime: Option[Instant], entityType: Option[String],
       entityId: Option[String], eventNames: Option[Seq[String]],
       targetEntityType: Option[Option[String]],
       targetEntityId: Option[Option[String]], limit: Option[Int],

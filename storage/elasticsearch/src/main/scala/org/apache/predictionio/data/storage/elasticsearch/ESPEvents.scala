@@ -30,7 +30,6 @@ import org.apache.spark.rdd.RDD
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.hadoop.mr.EsInputFormat
 import org.elasticsearch.spark._
-import org.joda.time.DateTime
 import java.io.IOException
 import org.apache.http.util.EntityUtils
 import org.apache.http.nio.entity.NStringEntity
@@ -65,8 +64,8 @@ class ESPEvents(client: RestClient, config: StorageClientConfig, baseIndex: Stri
   override def find(
     appId: Int,
     channelId: Option[Int] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,

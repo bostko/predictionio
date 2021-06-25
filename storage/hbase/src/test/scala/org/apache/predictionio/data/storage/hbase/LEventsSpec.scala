@@ -46,7 +46,6 @@ class LEventsSpec extends Specification with TestEvents {
 
     init default ${initDefault(eventClient)}
     insert 3 test events and get back by event ID ${insertAndGetEvents(eventClient)}
-    insert 3 test events with timezone and get back by event ID ${insertAndGetTimezone(eventClient)}
     insert and delete by ID ${insertAndDelete(eventClient)}
     insert test user events ${insertTestUserEvents(eventClient)}
     find user events ${findUserEvents(eventClient)}

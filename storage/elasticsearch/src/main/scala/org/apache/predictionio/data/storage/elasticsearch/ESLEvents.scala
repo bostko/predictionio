@@ -29,7 +29,6 @@ import org.apache.predictionio.data.storage.Event
 import org.apache.predictionio.data.storage.LEvents
 import org.apache.predictionio.data.storage.StorageClientConfig
 import org.elasticsearch.client.{ResponseException, RestClient}
-import org.joda.time.DateTime
 import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.native.JsonMethods._
@@ -118,10 +117,10 @@ class ESLEvents(val client: RestClient, config: StorageClientConfig, val baseInd
           ("entityId" -> event.entityId) ~
           ("targetEntityType" -> event.targetEntityType) ~
           ("targetEntityId" -> event.targetEntityId) ~
-          ("eventTime" -> ESUtils.formatUTCDateTime(event.eventTime)) ~
+          ("eventTime" -> ESUtils.formatUTCInstant(event.eventTime)) ~
           ("tags" -> event.tags) ~
           ("prId" -> event.prId) ~
-          ("creationTime" -> ESUtils.formatUTCDateTime(event.creationTime)) ~
+          ("creationTime" -> ESUtils.formatUTCInstant(event.creationTime)) ~
           ("properties" -> write(event.properties.toJObject))
         val entity = new NStringEntity(compact(render(json)), ContentType.APPLICATION_JSON)
         val response = client.performRequest(
@@ -173,10 +172,10 @@ class ESLEvents(val client: RestClient, config: StorageClientConfig, val baseInd
             ("entityId" -> event.entityId) ~
             ("targetEntityType" -> event.targetEntityType) ~
             ("targetEntityId" -> event.targetEntityId) ~
-            ("eventTime" -> ESUtils.formatUTCDateTime(event.eventTime)) ~
+            ("eventTime" -> ESUtils.formatUTCInstant(event.eventTime)) ~
             ("tags" -> event.tags) ~
             ("prId" -> event.prId) ~
-            ("creationTime" -> ESUtils.formatUTCDateTime(event.creationTime)) ~
+            ("creationTime" -> ESUtils.formatUTCInstant(event.creationTime)) ~
             ("properties" -> write(event.properties.toJObject))
 
           compact(render(commandJson)) + "\n" + compact(render(documentJson))
@@ -303,8 +302,8 @@ class ESLEvents(val client: RestClient, config: StorageClientConfig, val baseInd
   override def futureFind(
     appId: Int,
     channelId: Option[Int] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,

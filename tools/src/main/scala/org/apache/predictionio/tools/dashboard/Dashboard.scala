@@ -24,7 +24,6 @@ import org.apache.predictionio.data.storage.Storage
 import scala.concurrent.{Await, ExecutionContext, Future}
 import akka.actor.ActorSystem
 import akka.http.scaladsl.server.directives.FutureDirectives.onSuccess
-import com.github.nscala_time.time.Imports.DateTime
 import grizzled.slf4j.Logging
 import akka.http.scaladsl.{ConnectionContext, Http, HttpsConnectionContext}
 import akka.http.scaladsl.model._
@@ -36,6 +35,7 @@ import akka.http.scaladsl.model.ContentTypes._
 import com.typesafe.config.ConfigFactory
 import org.apache.predictionio.configuration.SSLConfiguration
 
+import java.time.Instant
 import scala.concurrent.duration._
 
 case class DashboardConfig(
@@ -71,7 +71,7 @@ object DashboardServer extends KeyAuthentication with CorsSupport with SSLConfig
     implicit val executionContext = system.dispatcher
     val serverConfig = ConfigFactory.load("server.conf")
     val sslEnforced = serverConfig.getBoolean("org.apache.predictionio.server.ssl-enforced")
-    val route = createRoute(DateTime.now, dc)
+    val route = createRoute(Instant.now, dc)
     if(sslEnforced){
       val https: HttpsConnectionContext = ConnectionContext.https(sslContext)
       Http().setDefaultServerHttpContext(https)
@@ -82,7 +82,7 @@ object DashboardServer extends KeyAuthentication with CorsSupport with SSLConfig
     system
   }
 
-  def createRoute(serverStartTime: DateTime, dc: DashboardConfig)
+  def createRoute(serverStartTime: Instant, dc: DashboardConfig)
                  (implicit executionContext: ExecutionContext): Route = {
     val evaluationInstances = Storage.getMetaDataEvaluationInstances
     val pioEnvVars = sys.env.filter(kv => kv._1.startsWith("PIO_"))

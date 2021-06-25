@@ -23,13 +23,12 @@ import org.apache.predictionio.data.storage.DataMap
 import org.apache.predictionio.data.storage.Event
 import org.apache.predictionio.data.storage.LEvents
 import org.apache.predictionio.data.storage.StorageClientConfig
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.json4s.JObject
 import org.json4s.native.Serialization.read
 import org.json4s.native.Serialization.write
 import scalikejdbc._
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -61,11 +60,9 @@ class JDBCLEvents(
         targetEntityId text,
         properties text,
         eventTime timestamp DEFAULT CURRENT_TIMESTAMP,
-        eventTimeZone varchar(50) not null,
         tags text,
         prId text,
-        creationTime timestamp DEFAULT CURRENT_TIMESTAMP,
-        creationTimeZone varchar(50) not null)""").execute().apply()
+        creationTime timestamp DEFAULT CURRENT_TIMESTAMP)""").execute().apply()
 
         // create index
         SQL(s"create index $entityIdIndexName on $tableName (entityId)").execute().apply()
@@ -81,11 +78,9 @@ class JDBCLEvents(
         targetEntityId text,
         properties text,
         eventTime timestamp DEFAULT CURRENT_TIMESTAMP,
-        eventTimeZone varchar(50) not null,
         tags text,
         prId text,
-        creationTime timestamp DEFAULT CURRENT_TIMESTAMP,
-        creationTimeZone varchar(50) not null)""").execute().apply()
+        creationTime timestamp DEFAULT CURRENT_TIMESTAMP)""").execute().apply()
       }
       true
     }
@@ -116,11 +111,9 @@ class JDBCLEvents(
         ${event.targetEntityId},
         ${write(event.properties.toJObject)},
         ${event.eventTime},
-        ${event.eventTime.getZone.getID},
         ${if (event.tags.nonEmpty) Some(event.tags.mkString(",")) else None},
         ${event.prId},
-        ${event.creationTime},
-        ${event.creationTime.getZone.getID}
+        ${event.creationTime}
       )
       """.update().apply()
       id
@@ -141,11 +134,9 @@ class JDBCLEvents(
           'targetEntityId   -> event.targetEntityId,
           'properties       -> write(event.properties.toJObject),
           'eventTime        -> event.eventTime,
-          'eventTimeZone    -> event.eventTime.getZone.getID,
           'tags             -> (if(event.tags.nonEmpty) Some(event.tags.mkString(",")) else None),
           'prId             -> event.prId,
-          'creationTime     -> event.creationTime,
-          'creationTimeZone -> event.creationTime.getZone.getID
+          'creationTime     -> event.creationTime
         )
       }
 
@@ -160,11 +151,9 @@ class JDBCLEvents(
         {targetEntityId},
         {properties},
         {eventTime},
-        {eventTimeZone},
         {tags},
         {prId},
-        {creationTime},
-        {creationTimeZone}
+        {creationTime}
       )
       """.batchByName(params: _*).apply()
 
@@ -186,11 +175,9 @@ class JDBCLEvents(
         targetEntityId,
         properties,
         eventTime,
-        eventTimeZone,
         tags,
         prId,
-        creationTime,
-        creationTimeZone
+        creationTime
       from $tableName
       where id = $eventId
       """.map(resultToEvent).single().apply()
@@ -211,8 +198,8 @@ class JDBCLEvents(
   override def futureFind(
       appId: Int,
       channelId: Option[Int] = None,
-      startTime: Option[DateTime] = None,
-      untilTime: Option[DateTime] = None,
+      startTime: Option[Instant] = None,
+      untilTime: Option[Instant] = None,
       entityType: Option[String] = None,
       entityId: Option[String] = None,
       eventNames: Option[Seq[String]] = None,
@@ -254,11 +241,9 @@ class JDBCLEvents(
         targetEntityId,
         properties,
         eventTime,
-        eventTimeZone,
         tags,
         prId,
-        creationTime,
-        creationTimeZone
+        creationTime
       from $tableName
       $whereClause
       order by $orderByClause
@@ -278,12 +263,9 @@ class JDBCLEvents(
       targetEntityId = rs.stringOpt("targetEntityId"),
       properties = rs.stringOpt("properties").map(p =>
         DataMap(read[JObject](p))).getOrElse(DataMap()),
-      eventTime = new DateTime(rs.jodaDateTime("eventTime"),
-        DateTimeZone.forID(rs.string("eventTimeZone"))),
+      eventTime = rs.timestamp("eventTime").toInstant,
       tags = rs.stringOpt("tags").map(t => t.split(",").toList).getOrElse(Nil),
       prId = rs.stringOpt("prId"),
-      creationTime = new DateTime(rs.jodaDateTime("creationTime"),
-        DateTimeZone.forID(rs.string("creationTimeZone")))
-    )
+      creationTime = rs.timestamp("creationTime").toInstant)
   }
 }

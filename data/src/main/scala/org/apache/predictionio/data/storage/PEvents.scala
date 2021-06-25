@@ -23,7 +23,7 @@ import org.apache.predictionio.annotation.DeveloperApi
 import org.apache.predictionio.annotation.Experimental
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.joda.time.DateTime
+import java.time.Instant
 
 import scala.reflect.ClassTag
 
@@ -39,8 +39,8 @@ trait PEvents extends Serializable {
   @transient protected lazy val logger = Logger[this.type]
   @deprecated("Use PEventStore.find() instead.", "0.9.2")
   def getByAppIdAndTimeAndEntity(appId: Int,
-    startTime: Option[DateTime],
-    untilTime: Option[DateTime],
+    startTime: Option[Instant],
+    untilTime: Option[Instant],
     entityType: Option[String],
     entityId: Option[String])(sc: SparkContext): RDD[Event] = {
       find(
@@ -80,8 +80,8 @@ trait PEvents extends Serializable {
   def find(
     appId: Int,
     channelId: Option[Int] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,
@@ -106,8 +106,8 @@ trait PEvents extends Serializable {
     appId: Int,
     channelId: Option[Int] = None,
     entityType: String,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     required: Option[Seq[String]] = None)
     (sc: SparkContext): RDD[(String, PropertyMap)] = {
     val eventRDD = find(
@@ -136,8 +136,8 @@ trait PEvents extends Serializable {
   def extractEntityMap[A: ClassTag](
     appId: Int,
     entityType: String,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     required: Option[Seq[String]] = None)
     (sc: SparkContext)(extract: DataMap => A): EntityMap[A] = {
     val idToData: Map[String, A] = aggregateProperties(

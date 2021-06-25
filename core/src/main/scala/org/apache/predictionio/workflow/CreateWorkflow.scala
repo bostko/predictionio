@@ -20,7 +20,6 @@ package org.apache.predictionio.workflow
 
 import java.net.URI
 
-import com.github.nscala_time.time.Imports._
 import com.google.common.io.ByteStreams
 import grizzled.slf4j.Logging
 import org.apache.predictionio.controller.Engine
@@ -36,6 +35,7 @@ import org.json4s.JValue
 import org.json4s.JString
 import org.json4s.native.JsonMethods.parse
 
+import java.time.Instant
 import scala.language.existentials
 
 object CreateWorkflow extends Logging {
@@ -227,8 +227,8 @@ object CreateWorkflow extends Logging {
         val engineInstance = EngineInstance(
           id = "",
           status = "INIT",
-          startTime = DateTime.now,
-          endTime = DateTime.now,
+          startTime = Instant.now,
+          endTime = Instant.now,
           engineId = wfc.engineId,
           engineVersion = wfc.engineVersion,
           engineVariant = variantId,

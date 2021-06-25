@@ -23,31 +23,31 @@ import org.apache.predictionio.data.storage.EventValidation
 import org.apache.predictionio.data.storage.DataMap
 import org.apache.predictionio.data.storage.Storage
 
-import org.joda.time.DateTime
+import java.time.Instant
 import scala.language.implicitConversions
 
 import scala.concurrent.ExecutionContext.Implicits.global // TODO
 
 object ViewPredicates {
   @deprecated("Use LEvents or LEventStore instead.", "0.9.2")
-  def getStartTimePredicate(startTimeOpt: Option[DateTime])
+  def getStartTimePredicate(startTimeOpt: Option[Instant])
   : (Event => Boolean) = {
     startTimeOpt.map(getStartTimePredicate).getOrElse(_ => true)
   }
 
   @deprecated("Use LEvents or LEventStore instead.", "0.9.2")
-  def getStartTimePredicate(startTime: DateTime): (Event => Boolean) = {
-    e => (!(e.eventTime.isBefore(startTime) || e.eventTime.isEqual(startTime)))
+  def getStartTimePredicate(startTime: Instant): (Event => Boolean) = {
+    e => (!(e.eventTime.isBefore(startTime) || e.eventTime.equals(startTime)))
   }
 
   @deprecated("Use LEvents or LEventStore instead.", "0.9.2")
-  def getUntilTimePredicate(untilTimeOpt: Option[DateTime])
+  def getUntilTimePredicate(untilTimeOpt: Option[Instant])
   : (Event => Boolean) = {
     untilTimeOpt.map(getUntilTimePredicate).getOrElse(_ => true)
   }
 
   @deprecated("Use LEvents or LEventStore instead.", "0.9.2")
-  def getUntilTimePredicate(untilTime: DateTime): (Event => Boolean) = {
+  def getUntilTimePredicate(untilTime: Instant): (Event => Boolean) = {
     _.eventTime.isBefore(untilTime)
   }
 
@@ -117,8 +117,8 @@ class EventSeq(val events: List[Event]) {
   def filter(
     eventOpt: Option[String] = None,
     entityTypeOpt: Option[String] = None,
-    startTimeOpt: Option[DateTime] = None,
-    untilTimeOpt: Option[DateTime] = None): EventSeq = {
+    startTimeOpt: Option[Instant] = None,
+    untilTimeOpt: Option[Instant] = None): EventSeq = {
 
     events
     .filter(ViewPredicates.getEventPredicate(eventOpt))
@@ -135,7 +135,7 @@ class EventSeq(val events: List[Event]) {
   : Map[String, T] = {
     events
     .groupBy( _.entityId )
-    .mapValues( _.sortBy(_.eventTime.getMillis).foldLeft[T](init)(op))
+    .mapValues( _.sortBy(_.eventTime).foldLeft[T](init)(op))
   }
 
 
@@ -144,8 +144,8 @@ class EventSeq(val events: List[Event]) {
 
 class LBatchView(
   val appId: Int,
-  val startTime: Option[DateTime],
-  val untilTime: Option[DateTime]) {
+  val startTime: Option[Instant],
+  val untilTime: Option[Instant]) {
 
   @transient lazy val eventsDb = Storage.getLEvents()
 
@@ -167,8 +167,8 @@ class LBatchView(
   @deprecated("Use LEventStore instead.", "0.9.2")
   def aggregateProperties(
       entityType: String,
-      startTimeOpt: Option[DateTime] = None,
-      untilTimeOpt: Option[DateTime] = None
+      startTimeOpt: Option[Instant] = None,
+      untilTimeOpt: Option[Instant] = None
       ): Map[String, DataMap] = {
 
     events

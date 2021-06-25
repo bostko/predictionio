@@ -22,7 +22,6 @@ import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 import akka.event.Logging
-import com.github.nscala_time.time.Imports.DateTime
 import com.twitter.bijection.Injection
 import com.twitter.chill.{KryoBase, KryoInjection, ScalaKryoInstantiator}
 import com.typesafe.config.ConfigFactory
@@ -58,6 +57,8 @@ import scala.concurrent.duration._
 import scala.language.existentials
 import scala.util.{Failure, Random, Success}
 import scalaj.http.HttpOptions
+
+import java.time.Instant
 
 class KryoInstantiator(classLoader: ClassLoader) extends ScalaKryoInstantiator {
   override def newKryo(): KryoBase = {
@@ -410,7 +411,7 @@ class PredictionServer[Q, P](
     val system: ActorSystem) extends KeyAuthentication {
 
   val log = Logging(system, getClass)
-  val serverStartTime = DateTime.now
+  val serverStartTime = Instant.now
 
   var requestCount: Int = 0
   var avgServingSec: Double = 0.0
@@ -485,9 +486,9 @@ class PredictionServer[Q, P](
         post {
           entity(as[String]) { queryString =>
             try {
-              val servingStartTime = DateTime.now
+              val servingStartTime = Instant.now
               val jsonExtractorOption = args.jsonExtractor
-              val queryTime = DateTime.now
+              val queryTime = Instant.now
               // Extract Query from Json
               val query = JsonExtractor.extract(
                 jsonExtractorOption,
@@ -595,9 +596,9 @@ class PredictionServer[Q, P](
               pluginsActorRef ! (engineInstance, queryJValue, result)
 
               // Bookkeeping
-              val servingEndTime = DateTime.now
+              val servingEndTime = Instant.now
               lastServingSec =
-                (servingEndTime.getMillis - servingStartTime.getMillis) / 1000.0
+                (servingEndTime.toEpochMilli - servingStartTime.toEpochMilli) / 1000.0
               avgServingSec =
                 ((avgServingSec * requestCount) + lastServingSec) /
                 (requestCount + 1)

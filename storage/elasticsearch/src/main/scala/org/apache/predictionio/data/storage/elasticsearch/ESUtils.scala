@@ -28,9 +28,9 @@ import org.json4s.JsonDSL._
 import org.json4s.native.JsonMethods._
 import org.json4s.native.Serialization.read
 import org.apache.http.util.EntityUtils
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.DateTimeZone
+import java.time.Instant
+import org.joda.time.format.InstantFormat
+import java.time.InstantZone
 import org.apache.predictionio.data.storage.StorageClientConfig
 import org.apache.http.HttpHost
 import org.apache.predictionio.data.storage.Event
@@ -61,8 +61,8 @@ object ESUtils {
     val targetEntityType = getOptString("targetEntityType")
     val targetEntityId = getOptString("targetEntityId")
     val prId = getOptString("prId")
-    val eventTime: DateTime = ESUtils.parseUTCDateTime(getString("eventTime"))
-    val creationTime: DateTime = ESUtils.parseUTCDateTime(getString("creationTime"))
+    val eventTime: Instant = ESUtils.parseUTCInstant(getString("eventTime"))
+    val creationTime: Instant = ESUtils.parseUTCInstant(getString("creationTime"))
     val tags = (value \ "tags").extract[Seq[String]]
 
     Event(
@@ -202,19 +202,19 @@ object ESUtils {
       }
   }
 
-  def formatUTCDateTime(dt: DateTime): String = {
-    DateTimeFormat
-      .forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").print(dt.withZone(DateTimeZone.UTC))
+  def formatUTCInstant(dt: Instant): String = {
+    InstantFormat
+      .forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").print(dt.withZone(InstantZone.UTC))
   }
 
-  def parseUTCDateTime(str: String): DateTime = {
-    DateTimeFormat
-      .forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parseDateTime(str)
+  def parseUTCInstant(str: String): Instant = {
+    InstantFormat
+      .forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parseInstant(str)
   }
 
   def createEventQuery(
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,
@@ -223,11 +223,11 @@ object ESUtils {
     reversed: Option[Boolean] = None): String = {
     val mustQueries = Seq(
       startTime.map { x =>
-        val v = formatUTCDateTime(x)
+        val v = formatUTCInstant(x)
         s"""{"range":{"eventTime":{"gte":"${v}"}}}"""
       },
       untilTime.map { x =>
-        val v = formatUTCDateTime(x)
+        val v = formatUTCInstant(x)
         s"""{"range":{"eventTime":{"lt":"${v}"}}}"""
       },
       entityType.map(x => s"""{"term":{"entityType":"${x}"}}"""),

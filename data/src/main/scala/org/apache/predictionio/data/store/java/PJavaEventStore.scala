@@ -23,7 +23,7 @@ import org.apache.predictionio.data.storage.PropertyMap
 import org.apache.predictionio.data.store.PEventStore
 import org.apache.spark.SparkContext
 import org.apache.spark.api.java.JavaRDD
-import org.joda.time.DateTime
+import java.time.Instant
 
 import scala.collection.JavaConversions
 
@@ -55,8 +55,8 @@ object PJavaEventStore {
   def find(
     appName: String,
     channelName: Option[String],
-    startTime: Option[DateTime],
-    untilTime: Option[DateTime],
+    startTime: Option[Instant],
+    untilTime: Option[Instant],
     entityType: Option[String],
     entityId: Option[String],
     eventNames: Option[java.util.List[String]],
@@ -95,8 +95,8 @@ object PJavaEventStore {
     appName: String,
     entityType: String,
     channelName: Option[String],
-    startTime: Option[DateTime],
-    untilTime: Option[DateTime],
+    startTime: Option[Instant],
+    untilTime: Option[Instant],
     required: Option[java.util.List[String]],
     sc: SparkContext): JavaRDD[(String, PropertyMap)] = {
 

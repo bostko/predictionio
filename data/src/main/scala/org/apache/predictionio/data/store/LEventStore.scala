@@ -18,9 +18,10 @@
 
 package org.apache.predictionio.data.store
 
+import _root_.java.time.Instant
+
 import org.apache.predictionio.data.storage.Storage
 import org.apache.predictionio.data.storage.Event
-import org.joda.time.DateTime
 
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.Duration
@@ -81,8 +82,8 @@ object LEventStore {
     eventNames: Option[Seq[String]] = None,
     targetEntityType: Option[Option[String]] = None,
     targetEntityId: Option[Option[String]] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     limit: Option[Int] = None,
     latest: Boolean = true,
     timeout: Duration = defaultTimeout): Iterator[Event] = {
@@ -135,8 +136,8 @@ object LEventStore {
     eventNames: Option[Seq[String]] = None,
     targetEntityType: Option[Option[String]] = None,
     targetEntityId: Option[Option[String]] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     limit: Option[Int] = None,
     latest: Boolean = true)(implicit ec: ExecutionContext): Future[Iterator[Event]] = {
 
@@ -189,8 +190,8 @@ object LEventStore {
     eventNames: Option[Seq[String]] = None,
     targetEntityType: Option[Option[String]] = None,
     targetEntityId: Option[Option[String]] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     limit: Option[Int] = None,
     timeout: Duration = defaultTimeout): Iterator[Event] = {
 
@@ -243,8 +244,8 @@ object LEventStore {
     eventNames: Option[Seq[String]] = None,
     targetEntityType: Option[Option[String]] = None,
     targetEntityId: Option[Option[String]] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     limit: Option[Int] = None)(implicit ec: ExecutionContext): Future[Iterator[Event]] = {
 
     val (appId, channelId) = Common.appNameToId(appName, channelName)

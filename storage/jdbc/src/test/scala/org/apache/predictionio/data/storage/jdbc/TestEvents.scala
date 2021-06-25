@@ -19,13 +19,13 @@
 package org.apache.predictionio.data.storage.jdbc
 
 import org.apache.predictionio.data.storage.{DataMap, Event}
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.{Instant, InstantZone}
 
 trait TestEvents {
 
-  val u1BaseTime = new DateTime(654321)
-  val u2BaseTime = new DateTime(6543210)
-  val u3BaseTime = new DateTime(6543410)
+  val u1BaseTime = new Instant(654321)
+  val u2BaseTime = new Instant(6543210)
+  val u3BaseTime = new Instant(6543410)
 
   // u1 events
   val u1e1 = Event(
@@ -150,7 +150,7 @@ trait TestEvents {
         "prop6" : 4.56
       }"""
     ),
-    eventTime = DateTime.now,
+    eventTime = Instant.now,
     prId = Some("my_prid")
   )
   val r2 = Event(
@@ -187,7 +187,7 @@ trait TestEvents {
         "prop5" : ["a", "b", "c"],
         "prop6" : 4.56
       }"""),
-    eventTime = DateTime.now
+    eventTime = Instant.now
   )
   val r5 = Event(
     event = "my_event5",
@@ -205,7 +205,7 @@ trait TestEvents {
         "prop6" : 4.56
       }"""
     ),
-    eventTime = DateTime.now
+    eventTime = Instant.now
   )
   val r6 = Event(
     event = "my_event6",
@@ -223,7 +223,7 @@ trait TestEvents {
         "prop6" : 4.56
       }"""
     ),
-    eventTime = DateTime.now
+    eventTime = Instant.now
   )
 
   // timezone
@@ -243,7 +243,7 @@ trait TestEvents {
         "prop6" : 4.56
       }"""
     ),
-    eventTime = new DateTime(12345678, DateTimeZone.forID("-08:00")),
+    eventTime = new Instant(12345678, InstantZone.forID("-08:00")),
     prId = Some("my_prid")
   )
 
@@ -251,7 +251,7 @@ trait TestEvents {
     event = "my_event",
     entityType = "my_entity_type",
     entityId = "my_entity_id1",
-    eventTime = new DateTime(12345678, DateTimeZone.forID("+02:00")),
+    eventTime = new Instant(12345678, InstantZone.forID("+02:00")),
     prId = Some("my_prid")
   )
 
@@ -259,7 +259,7 @@ trait TestEvents {
     event = "my_event",
     entityType = "my_entity_type",
     entityId = "my_entity_id2",
-    eventTime = new DateTime(12345678, DateTimeZone.forID("+08:00")),
+    eventTime = new Instant(12345678, InstantZone.forID("+08:00")),
     prId = Some("my_prid")
   )
 

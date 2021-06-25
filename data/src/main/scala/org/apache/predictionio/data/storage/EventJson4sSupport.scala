@@ -20,9 +20,10 @@ package org.apache.predictionio.data.storage
 
 import org.apache.predictionio.annotation.DeveloperApi
 import org.apache.predictionio.data.{Utils => DataUtils}
-import org.joda.time.DateTime
 import org.json4s._
-import scala.util.{Try, Success, Failure}
+
+import java.time.Instant
+import scala.util.{Failure, Success, Try}
 
 /** :: DeveloperApi ::
   * Support library for dealing with [[Event]] and JSON4S
@@ -32,7 +33,7 @@ import scala.util.{Try, Success, Failure}
 @DeveloperApi
 object EventJson4sSupport {
   /** This is set to org.json4s.DefaultFormats. Do not use JSON4S to serialize
-    * or deserialize Joda-Time DateTime because it has some issues with timezone
+    * or deserialize Instant
     * (as of version 3.2.10)
     */
   implicit val formats = DefaultFormats
@@ -58,11 +59,11 @@ object EventJson4sSupport {
         val properties = fields.getOrElse[Map[String, JValue]](
           "properties", Map.empty)
         // default currentTime expressed as UTC timezone
-        lazy val currentTime = DateTime.now(EventValidation.defaultTimeZone)
+        lazy val currentTime = Instant.now()
         val eventTime = fields.getOpt[String]("eventTime")
           .map{ s =>
             try {
-              DataUtils.stringToDateTime(s)
+              DataUtils.stringToInstant(s)
             } catch {
               case _: Exception =>
                 throw new MappingException(s"Fail to extract eventTime ${s}")
@@ -79,7 +80,7 @@ object EventJson4sSupport {
       // val creationTime = fields.getOpt[String]("creationTime")
       //   .map{ s =>
       //     try {
-      //       DataUtils.stringToDateTime(s)
+      //       DataUtils.stringToInstant(s)
       //     } catch {
       //       case _: Exception =>
       //         throw new MappingException(s"Fail to extract creationTime ${s}")
@@ -126,7 +127,7 @@ object EventJson4sSupport {
         JField("targetEntityId",
           d.targetEntityId.map(JString(_)).getOrElse(JNothing)) ::
         JField("properties", d.properties.toJObject) ::
-        JField("eventTime", JString(DataUtils.dateTimeToString(d.eventTime))) ::
+        JField("eventTime", JString(DataUtils.InstantToString(d.eventTime))) ::
         // disable tags from API for now
         // JField("tags", JArray(d.tags.toList.map(JString(_)))) ::
         // disable tags from API for now
@@ -134,7 +135,7 @@ object EventJson4sSupport {
           d.prId.map(JString(_)).getOrElse(JNothing)) ::
         // don't show creationTime for now
         JField("creationTime",
-          JString(DataUtils.dateTimeToString(d.creationTime))) ::
+          JString(DataUtils.InstantToString(d.creationTime))) ::
         Nil)
     }
   }
@@ -153,11 +154,11 @@ object EventJson4sSupport {
       val targetEntityType = (jv \ "targetEntityType").extract[Option[String]]
       val targetEntityId = (jv \ "targetEntityId").extract[Option[String]]
       val properties = (jv \ "properties").extract[JObject]
-      val eventTime = DataUtils.stringToDateTime(
+      val eventTime = DataUtils.stringToInstant(
         (jv \ "eventTime").extract[String])
       val tags = (jv \ "tags").extract[Seq[String]]
       val prId = (jv \ "prId").extract[Option[String]]
-      val creationTime = DataUtils.stringToDateTime(
+      val creationTime = DataUtils.stringToInstant(
         (jv \ "creationTime").extract[String])
       Event(
         event = event,
@@ -190,12 +191,12 @@ object EventJson4sSupport {
         JField("targetEntityId",
           d.targetEntityId.map(JString(_)).getOrElse(JNothing)) ::
         JField("properties", d.properties.toJObject) ::
-        JField("eventTime", JString(DataUtils.dateTimeToString(d.eventTime))) ::
+        JField("eventTime", JString(DataUtils.InstantToString(d.eventTime))) ::
         JField("tags", JArray(d.tags.toList.map(JString(_)))) ::
         JField("prId",
           d.prId.map(JString(_)).getOrElse(JNothing)) ::
         JField("creationTime",
-          JString(DataUtils.dateTimeToString(d.creationTime))) ::
+          JString(DataUtils.InstantToString(d.creationTime))) ::
         Nil)
     }
   }

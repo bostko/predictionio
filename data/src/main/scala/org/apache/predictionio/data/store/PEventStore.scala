@@ -22,7 +22,7 @@ import org.apache.predictionio.data.storage.Storage
 import org.apache.predictionio.data.storage.Event
 import org.apache.predictionio.data.storage.PropertyMap
 
-import org.joda.time.DateTime
+import _root_.java.time.Instant
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
@@ -59,8 +59,8 @@ object PEventStore {
   def find(
     appName: String,
     channelName: Option[String] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,
@@ -100,8 +100,8 @@ object PEventStore {
     appName: String,
     entityType: String,
     channelName: Option[String] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     required: Option[Seq[String]] = None)
     (sc: SparkContext): RDD[(String, PropertyMap)] = {
 

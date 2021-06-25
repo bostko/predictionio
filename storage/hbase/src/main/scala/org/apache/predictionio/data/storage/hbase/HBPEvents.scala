@@ -26,7 +26,7 @@ import org.apache.hadoop.mapreduce.OutputFormat
 import org.apache.predictionio.data.storage.{Event, PEvents, StorageClientConfig}
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.joda.time.DateTime
+import java.time.Instant
 
 class HBPEvents(client: HBClient, config: StorageClientConfig, namespace: String) extends PEvents {
 
@@ -48,8 +48,8 @@ class HBPEvents(client: HBClient, config: StorageClientConfig, namespace: String
   def find(
     appId: Int,
     channelId: Option[Int] = None,
-    startTime: Option[DateTime] = None,
-    untilTime: Option[DateTime] = None,
+    startTime: Option[Instant] = None,
+    untilTime: Option[Instant] = None,
     entityType: Option[String] = None,
     entityId: Option[String] = None,
     eventNames: Option[Seq[String]] = None,
