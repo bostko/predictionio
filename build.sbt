@@ -36,7 +36,7 @@ lazy val scalaSparkDepsVersion = Map(
       "json4s" -> "3.2.11")),
   "2.12" -> Map(
     "3.0" -> Map(
-      "akka" -> "2.5.31",
+      "akka" -> "2.4.20",
       "hadoop" -> "2.7.7",
       "json4s" -> "3.6.11")))
 
@@ -67,7 +67,7 @@ sparkBinaryVersion in ThisBuild := binaryVersion(sparkVersion.value)
 
 hadoopVersion in ThisBuild := sys.props.getOrElse("hadoop.version", "2.7.7")
 
-akkaVersion in ThisBuild := sys.props.getOrElse("akka.version", "2.6.8")
+akkaVersion in ThisBuild := sys.props.getOrElse("akka.version", "2.4.20")
 
 elasticsearchVersion in ThisBuild := sys.props.getOrElse("elasticsearch.version", "5.6.9")
 
@@ -92,7 +92,7 @@ val commonSettings = Seq(
 
 val commonTestSettings = Seq(
   libraryDependencies ++= Seq(
-    "org.postgresql"   % "postgresql"  % "9.4.1212" % "test",
+    "org.postgresql"   % "postgresql"  % "42.2.9" % "test",
     "org.scalikejdbc" %% "scalikejdbc" % "3.2.3" % "test"))
 val dataJdbc = (project in file("storage/jdbc")).
   settings(commonSettings: _*)

@@ -33,7 +33,7 @@ class MailChimpConnectorSpec extends Specification with ConnectorTestUtil {
 
       val subscribe = Map(
         "type" -> "subscribe",
-        "fired_at" -> "2009-03-26 21:35:57",
+        "fired_at" -> "2009-03-26T21:35:57.000Z",
         "data[id]" -> "8a25ff1d98",
         "data[list_id]" -> "a6b5da1054",
         "data[email]" -> "api@mailchimp.com",
@@ -77,7 +77,7 @@ class MailChimpConnectorSpec extends Specification with ConnectorTestUtil {
 
       val unsubscribe = Map(
         "type" -> "unsubscribe",
-        "fired_at" -> "2009-03-26 21:40:57",
+        "fired_at" -> "2009-03-26T21:40:57.000Z",
         "data[action]" -> "unsub",
         "data[reason]" -> "manual",
         "data[id]" -> "8a25ff1d98",
@@ -125,7 +125,7 @@ class MailChimpConnectorSpec extends Specification with ConnectorTestUtil {
 
       val profileUpdate = Map(
         "type" -> "profile",
-        "fired_at" -> "2009-03-26 21:31:21",
+        "fired_at" -> "2009-03-26T21:31:21.000Z",
         "data[id]" -> "8a25ff1d98",
         "data[list_id]" -> "a6b5da1054",
         "data[email]" -> "api@mailchimp.com",
@@ -167,7 +167,7 @@ class MailChimpConnectorSpec extends Specification with ConnectorTestUtil {
 
       val emailUpdate = Map(
         "type" -> "upemail",
-        "fired_at" -> "2009-03-26 22:15:09",
+        "fired_at" -> "2009-03-26T22:15:09.000Z",
         "data[list_id]" -> "a6b5da1054",
         "data[new_id]" -> "51da8c3259",
         "data[new_email]" -> "api+new@mailchimp.com",
@@ -197,7 +197,7 @@ class MailChimpConnectorSpec extends Specification with ConnectorTestUtil {
 
       val cleanedEmail = Map(
         "type" -> "cleaned",
-        "fired_at" -> "2009-03-26 22:01:00",
+        "fired_at" -> "2009-03-26T22:01:00.000Z",
         "data[list_id]" -> "a6b5da1054",
         "data[campaign_id]" -> "4fjk2ma9xd",
         "data[reason]" -> "hard",
@@ -226,7 +226,7 @@ class MailChimpConnectorSpec extends Specification with ConnectorTestUtil {
 
       val campaign = Map(
         "type" -> "campaign",
-        "fired_at" -> "2009-03-26 22:15:09",
+        "fired_at" -> "2009-03-26T22:15:09.000Z",
         "data[id]" -> "5aa2102003",
         "data[subject]" -> "Test Campaign Subject",
         "data[status]" -> "sent",

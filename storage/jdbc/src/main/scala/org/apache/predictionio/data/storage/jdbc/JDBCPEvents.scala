@@ -17,7 +17,7 @@
 
 package org.apache.predictionio.data.storage.jdbc
 
-import java.time.{Duration, Instant}
+import java.time.Instant
 import java.sql.{DriverManager, ResultSet}
 import org.apache.predictionio.data.storage.{DataMap, Event, PEvents, StorageClientConfig}
 import org.apache.spark.SparkContext
@@ -28,6 +28,7 @@ import org.json4s.native.Serialization
 import scalikejdbc._
 
 import java.time.temporal.ChronoUnit
+import scala.concurrent.duration.{Duration, FiniteDuration, MILLISECONDS}
 
 /** JDBC implementation of [[PEvents]] */
 class JDBCPEvents(client: String, config: StorageClientConfig, namespace: String) extends PEvents {
@@ -50,9 +51,7 @@ class JDBCPEvents(client: String, config: StorageClientConfig, namespace: String
       */
     val upper = untilTime.map(_.toEpochMilli).getOrElse(Instant.now.plus(1, ChronoUnit.YEARS).toEpochMilli)
     val par = scala.math.min(
-      // TODO
-      0,
-//      new Duration(upper - lower).getStandardDays,
+      (new FiniteDuration(upper, MILLISECONDS) - new FiniteDuration(lower, MILLISECONDS)).toDays,
       config.properties.getOrElse("PARTITIONS", "4").toLong).toInt
     val entityTypeClause = entityType.map(x => s"and entityType = '$x'").getOrElse("")
     val entityIdClause = entityId.map(x => s"and entityId = '$x'").getOrElse("")

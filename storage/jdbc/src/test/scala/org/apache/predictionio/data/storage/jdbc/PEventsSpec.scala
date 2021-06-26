@@ -23,6 +23,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.specs2._
 import org.specs2.specification.Step
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class PEventsSpec extends Specification with TestEvents {
 

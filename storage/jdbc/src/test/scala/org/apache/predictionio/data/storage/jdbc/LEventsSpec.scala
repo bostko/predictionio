@@ -21,6 +21,7 @@ package org.apache.predictionio.data.storage.jdbc
 import org.apache.predictionio.data.storage.{Event, LEvents, PropertyMap, Storage}
 import org.specs2._
 import org.specs2.specification.Step
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class LEventsSpec extends Specification with TestEvents {
   def is = s2"""

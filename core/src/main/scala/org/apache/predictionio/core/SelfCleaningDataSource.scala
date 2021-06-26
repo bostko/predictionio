@@ -79,9 +79,8 @@ trait SelfCleaningDataSource {
       .flatMap(_.duration)
       .map { duration =>
         val fd = Duration(duration)
-        pEvents.filter(e => true
-          // TODO
-//          e.eventTime.isAfter(Instant.now().minus(fd)) || isSetEvent(e)
+        pEvents.filter(e =>
+          e.eventTime.isAfter(Instant.now().minusMillis(fd.toMillis)) || isSetEvent(e)
         )
       }.getOrElse(pEvents)
   }
@@ -99,9 +98,7 @@ trait SelfCleaningDataSource {
       .map { duration =>
         val fd = Duration(duration)
         lEvents.filter(e =>
-          true
-          // TODO
-//          e.eventTime.isAfter(Instant.now().minus(fd)) || isSetEvent(e)
+          e.eventTime.isAfter(Instant.now().minusMillis(fd.toMillis)) || isSetEvent(e)
         )
       }.getOrElse(lEvents)
   }

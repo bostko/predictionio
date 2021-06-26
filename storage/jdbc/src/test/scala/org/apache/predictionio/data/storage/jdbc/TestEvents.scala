@@ -19,13 +19,15 @@
 package org.apache.predictionio.data.storage.jdbc
 
 import org.apache.predictionio.data.storage.{DataMap, Event}
-import org.joda.time.{Instant, InstantZone}
+
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 trait TestEvents {
 
-  val u1BaseTime = new Instant(654321)
-  val u2BaseTime = new Instant(6543210)
-  val u3BaseTime = new Instant(6543410)
+  val u1BaseTime = Instant.ofEpochMilli(654321)
+  val u2BaseTime = Instant.ofEpochMilli(6543210)
+  val u3BaseTime = Instant.ofEpochMilli(6543410)
 
   // u1 events
   val u1e1 = Event(
@@ -44,35 +46,35 @@ trait TestEvents {
   val u1e2 = u1e1.copy(
     event = "$set",
     properties = DataMap("""{"a" : 2}"""),
-    eventTime = u1BaseTime.plusDays(1)
+    eventTime = u1BaseTime.plus(1, ChronoUnit.DAYS)
   )
 
   val u1e3 = u1e1.copy(
     event = "$set",
     properties = DataMap("""{"b" : "value4"}"""),
-    eventTime = u1BaseTime.plusDays(2)
+    eventTime = u1BaseTime.plus(2, ChronoUnit.DAYS)
   )
 
   val u1e4 = u1e1.copy(
     event = "$unset",
     properties = DataMap("""{"b" : null}"""),
-    eventTime = u1BaseTime.plusDays(3)
+    eventTime = u1BaseTime.plus(3, ChronoUnit.DAYS)
   )
 
   val u1e5 = u1e1.copy(
     event = "$set",
     properties = DataMap("""{"e" : "new"}"""),
-    eventTime = u1BaseTime.plusDays(4)
+    eventTime = u1BaseTime.plus(4, ChronoUnit.DAYS)
   )
 
-  val u1LastTime = u1BaseTime.plusDays(4)
+  val u1LastTime = u1BaseTime.plus(4, ChronoUnit.DAYS)
   val u1 = """{"a": 2, "d": [1, 2, 3], "e": "new"}"""
 
   // delete event for u1
   val u1ed = u1e1.copy(
     event = "$delete",
     properties = DataMap(),
-    eventTime = u1BaseTime.plusDays(5)
+    eventTime = u1BaseTime.plus(5, ChronoUnit.DAYS)
   )
 
   // u2 events
@@ -92,16 +94,16 @@ trait TestEvents {
   val u2e2 = u2e1.copy(
     event = "$unset",
     properties = DataMap("""{"a" : null}"""),
-    eventTime = u2BaseTime.plusDays(1)
+    eventTime = u2BaseTime.plus(1, ChronoUnit.DAYS)
   )
 
   val u2e3 = u2e1.copy(
     event = "$set",
     properties = DataMap("""{"b" : "value9", "g": "new11"}"""),
-    eventTime = u2BaseTime.plusDays(2)
+    eventTime = u2BaseTime.plus(2, ChronoUnit.DAYS)
   )
 
-  val u2LastTime = u2BaseTime.plusDays(2)
+  val u2LastTime = u2BaseTime.plus(2, ChronoUnit.DAYS)
   val u2 = """{"b": "value9", "d": [7, 5, 6], "g": "new11"}"""
 
   // u3 events
@@ -121,16 +123,16 @@ trait TestEvents {
   val u3e2 = u3e1.copy(
     event = "$unset",
     properties = DataMap("""{"a" : null}"""),
-    eventTime = u3BaseTime.plusDays(1)
+    eventTime = u3BaseTime.plus(1, ChronoUnit.DAYS)
   )
 
   val u3e3 = u3e1.copy(
     event = "$set",
     properties = DataMap("""{"b" : "value10", "f": "new12", "d" : [1, 3, 2]}"""),
-    eventTime = u3BaseTime.plusDays(2)
+    eventTime = u3BaseTime.plus(2, ChronoUnit.DAYS)
   )
 
-  val u3LastTime = u3BaseTime.plusDays(2)
+  val u3LastTime = u3BaseTime.plus(2, ChronoUnit.DAYS)
   val u3 = """{"b": "value10", "d": [1, 3, 2], "f": "new12"}"""
 
   // some random events
@@ -224,43 +226,6 @@ trait TestEvents {
       }"""
     ),
     eventTime = Instant.now
-  )
-
-  // timezone
-  val tz1 = Event(
-    event = "my_event",
-    entityType = "my_entity_type",
-    entityId = "my_entity_id0",
-    targetEntityType = Some("my_target_entity_type"),
-    targetEntityId = Some("my_target_entity_id"),
-    properties = DataMap(
-      """{
-        "prop1" : 1,
-        "prop2" : "value2",
-        "prop3" : [1, 2, 3],
-        "prop4" : true,
-        "prop5" : ["a", "b", "c"],
-        "prop6" : 4.56
-      }"""
-    ),
-    eventTime = new Instant(12345678, InstantZone.forID("-08:00")),
-    prId = Some("my_prid")
-  )
-
-  val tz2 = Event(
-    event = "my_event",
-    entityType = "my_entity_type",
-    entityId = "my_entity_id1",
-    eventTime = new Instant(12345678, InstantZone.forID("+02:00")),
-    prId = Some("my_prid")
-  )
-
-  val tz3 = Event(
-    event = "my_event",
-    entityType = "my_entity_type",
-    entityId = "my_entity_id2",
-    eventTime = new Instant(12345678, InstantZone.forID("+08:00")),
-    prId = Some("my_prid")
   )
 
 }

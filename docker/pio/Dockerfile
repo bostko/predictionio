@@ -20,10 +20,7 @@ FROM openjdk:11.0.11
 ARG PIO_TAG=v0.13.0
 ENV SCALA_VERSION=2.12.6
 ENV SPARK_VERSION=3.0.3
-ENV HADOOP_VERSION=2.7.7
-ENV ELASTICSEARCH_VERSION=5.6.9
-ENV PGSQL_VERSION=42.2.4
-ENV MYSQL_VERSION=8.0.12
+ENV PGSQL_VERSION=42.2.9
 ENV PIO_HOME=/usr/share/predictionio
 
 RUN apt-get update && \
@@ -35,8 +32,6 @@ WORKDIR /opt/src/predictionio
 RUN bash ./make-distribution.sh \
       -Dscala.version=$SCALA_VERSION \
       -Dspark.version=$SPARK_VERSION \
-      -Dhadoop.version=$HADOOP_VERSION \
-      -Delasticsearch.version=$ELASTICSEARCH_VERSION \
       --with-deb && \
     dpkg -i ./assembly/target/predictionio_*.deb && \
     cp -r ./python /usr/share/predictionio && \
@@ -48,8 +43,7 @@ RUN cp /etc/predictionio/pio-env.sh /etc/predictionio/pio-env.sh.orig && \
     echo "#!/usr/bin/env bash" > /etc/predictionio/pio-env.sh
 RUN curl -L -o $PIO_HOME/lib/postgresql-$PGSQL_VERSION.jar \
     "https://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/${PGSQL_VERSION}/postgresql-${PGSQL_VERSION}.jar" && \
-    echo "POSTGRES_JDBC_DRIVER=$PIO_HOME/lib/postgresql-$PGSQL_VERSION.jar" >> /etc/predictionio/pio-env.sh && \
-    echo "MYSQL_JDBC_DRIVER=$PIO_HOME/lib/mysql-connector-java-$MYSQL_VERSION.jar" >> /etc/predictionio/pio-env.sh
+    echo "POSTGRES_JDBC_DRIVER=$PIO_HOME/lib/postgresql-$PGSQL_VERSION.jar" >> /etc/predictionio/pio-env.sh
 
 WORKDIR /usr/share
 RUN curl -o /opt/src/spark-$SPARK_VERSION.tgz \

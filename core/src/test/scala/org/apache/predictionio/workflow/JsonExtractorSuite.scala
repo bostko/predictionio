@@ -157,6 +157,7 @@ class JsonExtractorSuite extends FunSuite with Matchers {
     query should be (new JavaQuery("query string"))
   }
 
+/*
   test("Extract Java object using option Json4sNative should throw an exception") {
 
     val json = """{"q": "query string"}"""
@@ -168,6 +169,7 @@ class JsonExtractorSuite extends FunSuite with Matchers {
         classOf[JavaQuery])
     }
   }
+*/
 
   test("Extract Scala object using option Json4sNative with custom deserializer") {
     val json = """{"string": "query string", "optional": "o", "default": "d"}"""
