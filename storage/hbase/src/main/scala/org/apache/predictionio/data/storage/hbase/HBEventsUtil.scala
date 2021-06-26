@@ -37,7 +37,6 @@ import org.json4s.DefaultFormats
 import org.json4s.JObject
 import org.json4s.native.Serialization.{ read, write }
 
-import org.apache.commons.codec.binary.Base64
 import java.security.MessageDigest
 
 import java.util.UUID

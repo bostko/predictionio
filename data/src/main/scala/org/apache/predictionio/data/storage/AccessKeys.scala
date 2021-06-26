@@ -19,9 +19,9 @@
 package org.apache.predictionio.data.storage
 
 import java.security.SecureRandom
-
 import org.apache.predictionio.annotation.DeveloperApi
-import org.apache.commons.codec.binary.Base64
+
+import java.util.Base64
 
 /** :: DeveloperApi ::
   * Stores mapping of access keys, app IDs, and lists of allowed event names
@@ -69,7 +69,7 @@ trait AccessKeys {
     val sr = new SecureRandom
     val srBytes = Array.fill(48)(0.toByte)
     sr.nextBytes(srBytes)
-    Base64.encodeBase64URLSafeString(srBytes) match {
+    Base64.getEncoder.encodeToString(srBytes) match {
       case x if x startsWith "-" => generateKey
       case x => x
     }
