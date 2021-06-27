@@ -21,7 +21,7 @@ name := "apache-predictionio-data-localfs"
 
 libraryDependencies ++= Seq(
   "org.apache.predictionio" %% "apache-predictionio-core" % version.value % "provided",
-  "org.scalatest"           %% "scalatest"      % "3.1.0-M2" % "test")
+  "org.scalatest"           %% "scalatest"      % "3.1.0" % "test")
 
 parallelExecution in Test := false
 

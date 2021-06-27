@@ -25,7 +25,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka"      %% "akka-http-testkit" % "10.0.15" % "test",
   "org.apache.spark"       %% "spark-sql"      % sparkVersion.value % "provided",
   "org.clapper"            %% "grizzled-slf4j" % "1.3.4",
-  "org.scalatest"          %% "scalatest"      % "3.1.0-M2" % "test",
+  "org.scalatest"          %% "scalatest"      % "3.1.0" % "test",
   "org.specs2"             %% "specs2-core"         % "3.8.9" % "test"
     exclude("org.scalaz.stream", s"scalaz-stream_${scalaBinaryVersion.value}"),
   "org.scalamock"          %% "scalamock-specs2-support" % "3.6.0" % "test",

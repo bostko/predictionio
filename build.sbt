@@ -35,10 +35,10 @@ lazy val scalaSparkDepsVersion = Map(
       "hadoop" -> "2.7.7",
       "json4s" -> "3.2.11")),
   "2.12" -> Map(
-    "3.0" -> Map(
+    "2.4" -> Map(
       "akka" -> "2.4.20",
       "hadoop" -> "2.7.7",
-      "json4s" -> "3.6.11")))
+      "json4s" -> "3.5.3")))
 
 name := "apache-predictionio-parent"
 
@@ -46,11 +46,11 @@ version in ThisBuild := "0.16.0-SNAPSHOT"
 
 organization in ThisBuild := "org.apache.predictionio"
 
-scalaVersion in ThisBuild := sys.props.getOrElse("scala.version", "2.12.6")
+scalaVersion in ThisBuild := sys.props.getOrElse("scala.version", "2.12.10")
 
 scalaBinaryVersion in ThisBuild := binaryVersion(scalaVersion.value)
 
-crossScalaVersions in ThisBuild := Seq("2.12.6")
+crossScalaVersions in ThisBuild := Seq("2.12.10")
 
 scalacOptions in ThisBuild ++= Seq("-deprecation", "-unchecked", "-feature")
 
@@ -61,7 +61,7 @@ javacOptions in (ThisBuild, compile) ++= Seq("-source", "1.8", "-target", "1.8",
   "-Xlint:deprecation", "-Xlint:unchecked")
 
 // Ignore differentiation of Spark patch levels
-sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", "3.0.3")
+sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", "2.4.8")
 
 sparkBinaryVersion in ThisBuild := binaryVersion(sparkVersion.value)
 
@@ -77,7 +77,6 @@ json4sVersion in ThisBuild := {
   sparkBinaryVersion.value match {
     case "2.0" | "2.1" | "2.2" | "2.3" => "3.2.11"
     case "2.4" => "3.5.3"
-    case "3.0" => "3.6.11"
   }
 }
 
@@ -94,6 +93,10 @@ val commonTestSettings = Seq(
   libraryDependencies ++= Seq(
     "org.postgresql"   % "postgresql"  % "42.2.9" % "test",
     "org.scalikejdbc" %% "scalikejdbc" % "3.2.3" % "test"))
+
+val dataHdfs = (project in file("storage/hdfs")).
+  settings(commonSettings: _*)
+
 val dataJdbc = (project in file("storage/jdbc")).
   settings(commonSettings: _*)
 
@@ -147,7 +150,7 @@ val tools = (project in file("tools")).
 val storageProjectReference = Seq(
 //    dataElasticsearch,
 //    dataHbase,
-//    dataHdfs,
+    dataHdfs,
     dataJdbc,
     dataLocalfs,
 //    dataS3

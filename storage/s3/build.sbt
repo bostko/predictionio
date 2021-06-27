@@ -23,7 +23,7 @@ libraryDependencies ++= Seq(
   "org.apache.predictionio" %% "apache-predictionio-core" % version.value % "provided",
   "com.google.guava"        % "guava"                     % "24.0-jre"      % "provided",
   "com.amazonaws"           % "aws-java-sdk-s3"           % "1.11.132",
-  "org.scalatest"           %% "scalatest"                % "3.1.0-M2" % "test")
+  "org.scalatest"           %% "scalatest"                % "3.1.0" % "test")
 
 parallelExecution in Test := false
 

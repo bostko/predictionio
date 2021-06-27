@@ -31,7 +31,7 @@ At first, create a sbt project with following `build.sbt`:
 ```scala
 name := "pio-plugin-example"
 version := "1.0"
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.10"
 libraryDependencies += "org.apache.predictionio" %% "apache-predictionio-core" % "0.14.0"
 ```
 

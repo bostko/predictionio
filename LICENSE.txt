@@ -1700,10 +1700,10 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 Binary distribution bundles
 
-  org.scala-lang # scala-library # 2.12.6 (http://scala-lang.org/)
-  org.scala-lang # scala-compiler # 2.12.6 (http://scala-lang.org/)
-  org.scala-lang # scala-reflect # 2.12.6 (http://scala-lang.org/)
-  org.scala-lang # scalap # 2.12.6 (http://scala-lang.org/)
+  org.scala-lang # scala-library # 2.12.10 (http://scala-lang.org/)
+  org.scala-lang # scala-compiler # 2.12.10 (http://scala-lang.org/)
+  org.scala-lang # scala-reflect # 2.12.10 (http://scala-lang.org/)
+  org.scala-lang # scalap # 2.12.10 (http://scala-lang.org/)
   org.scala-lang.modules # scala-java8-compat_2.11 # 0.7.0 (http://scala-lang.org/)
   org.scala-lang.modules # scala-parser-combinators_2.11 # 1.0.6 (http://scala-lang.org/)
   org.scala-lang.modules # scala-parser-combinators_2.11 # 1.1.0 (http://scala-lang.org/)
