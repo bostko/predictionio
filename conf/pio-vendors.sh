@@ -45,7 +45,7 @@ export ES_TAG="$PIO_ELASTICSEARCH_VERSION"
 HBASE_MAJOR=`echo $PIO_HBASE_VERSION | awk -F. '{print $1 "." $2}'`
 export HBASE_TAG="$HBASE_MAJOR"
 
-PGSQL_JAR=postgresql-9.4-1204.jdbc41.jar
+PGSQL_JAR=postgresql-42.2.9.jar
 PGSQL_DOWNLOAD=https://jdbc.postgresql.org/download/${PGSQL_JAR}
 
 HADOOP_MAJOR=`echo $PIO_HADOOP_VERSION | awk -F. '{print $1 "." $2}'`

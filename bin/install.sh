@@ -22,7 +22,7 @@ SPARK_VERSION=3.0.3
 # Looks like support for Elasticsearch 2.0 will require 2.0 so deferring
 ELASTICSEARCH_VERSION=5.6.9
 HBASE_VERSION=1.2.6
-POSTGRES_VERSION=42.0.0
+POSTGRES_VERSION=42.2.9
 MYSQL_VERSION=5.1.41
 PIO_DIR=$HOME/PredictionIO
 USER_PROFILE=$HOME/.profile
@@ -328,7 +328,7 @@ echo -e "\033[1;32mSpark setup done!\033[0m"
 installPGSQL () {
   if [[ ${distribution} = "$DISTRO_DEBIAN" ]]; then
       echo -e "\033[1;36mInstalling PostgreSQL...\033[0m"
-      sudo apt-get install postgresql-9.4 -y
+      sudo apt-get install postgresql -y
       echo -e "\033[1;36mPlease use the default password 'pio' when prompted to enter one\033[0m"
       sudo -u postgres createdb pio
       sudo -u postgres createuser -P pio
