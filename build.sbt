@@ -37,7 +37,7 @@ lazy val scalaSparkDepsVersion = Map(
   "2.12" -> Map(
     "2.4" -> Map(
       "akka" -> "2.4.20",
-      "hadoop" -> "2.7.7",
+      "hadoop" -> "3.1.4",
       "json4s" -> "3.5.3")))
 
 name := "apache-predictionio-parent"
@@ -47,6 +47,8 @@ version in ThisBuild := "0.16.0-SNAPSHOT"
 organization in ThisBuild := "org.apache.predictionio"
 
 scalaVersion in ThisBuild := sys.props.getOrElse("scala.version", "2.12.10")
+
+scalaTestVersion in ThisBuild := sys.props.getOrElse("scalatest.version", "3.0.3")
 
 scalaBinaryVersion in ThisBuild := binaryVersion(scalaVersion.value)
 
@@ -61,11 +63,11 @@ javacOptions in (ThisBuild, compile) ++= Seq("-source", "1.8", "-target", "1.8",
   "-Xlint:deprecation", "-Xlint:unchecked")
 
 // Ignore differentiation of Spark patch levels
-sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", "2.4.8")
+sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", "2.4.7")
 
 sparkBinaryVersion in ThisBuild := binaryVersion(sparkVersion.value)
 
-hadoopVersion in ThisBuild := sys.props.getOrElse("hadoop.version", "2.7.7")
+hadoopVersion in ThisBuild := sys.props.getOrElse("hadoop.version", "3.1.4")
 
 akkaVersion in ThisBuild := sys.props.getOrElse("akka.version", "2.4.20")
 

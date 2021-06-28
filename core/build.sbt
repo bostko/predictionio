@@ -29,9 +29,9 @@ libraryDependencies ++= Seq(
   "org.json4s"             %% "json4s-ext"       % json4sVersion.value,
   "org.scalaj"             %% "scalaj-http"      % "2.4.2",
   "org.slf4j"               % "slf4j-log4j12"    % "1.7.31",
-  "org.scalatest"          %% "scalatest"        % "3.1.0" % "test",
+  "org.scalatest"          %% "scalatest"        % scalaTestVersion.value % "test",
   "org.specs2"             %% "specs2-core"           % "3.8.9" % "test",
-  "org.scalamock"          %% "scalamock-scalatest-support" % "3.6.0" % "test",
+  "org.scalamock"          %% "scalamock" % "4.1.0" % "test",
   "com.h2database"           % "h2"             % "1.4.200" % "test"
 )
 

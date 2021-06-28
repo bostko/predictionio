@@ -23,6 +23,6 @@ parallelExecution in Test := false
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-mllib" % sparkVersion.value % "provided",
-  "org.scalatest"    %% "scalatest" % sparkVersion.value % "test")
+  "org.scalatest"    %% "scalatest" % scalaTestVersion.value % "test")
 
 pomExtra := childrenPomExtra.value
