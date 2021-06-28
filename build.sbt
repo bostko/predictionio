@@ -37,7 +37,7 @@ lazy val scalaSparkDepsVersion = Map(
   "2.12" -> Map(
     "2.4" -> Map(
       "akka" -> "2.4.20",
-      "hadoop" -> "3.1.4",
+      "hadoop" -> "2.7.7",
       "json4s" -> "3.5.3")))
 
 name := "apache-predictionio-parent"
@@ -67,7 +67,7 @@ sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", "2.4.7")
 
 sparkBinaryVersion in ThisBuild := binaryVersion(sparkVersion.value)
 
-hadoopVersion in ThisBuild := sys.props.getOrElse("hadoop.version", "3.1.4")
+hadoopVersion in ThisBuild := sys.props.getOrElse("hadoop.version", "2.7.7")
 
 akkaVersion in ThisBuild := sys.props.getOrElse("akka.version", "2.4.20")
 

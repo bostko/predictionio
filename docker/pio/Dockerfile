@@ -20,6 +20,7 @@ FROM openjdk:11.0.11
 ARG PIO_TAG=v0.13.0
 ENV SCALA_VERSION=2.12.10
 ENV SPARK_VERSION=2.4.8
+ENV HADOOP_VERSION=2.7.7
 ENV PGSQL_VERSION=42.2.9
 ENV PIO_HOME=/usr/share/predictionio
 
@@ -32,6 +33,7 @@ WORKDIR /opt/src/predictionio
 RUN bash ./make-distribution.sh \
       -Dscala.version=$SCALA_VERSION \
       -Dspark.version=$SPARK_VERSION \
+      -Dhadoop.version=$HADOOP_VERSION \
       --with-deb && \
     dpkg -i ./assembly/target/predictionio_*.deb && \
     cp -r ./python /usr/share/predictionio && \
@@ -47,7 +49,7 @@ RUN curl -L -o $PIO_HOME/lib/postgresql-$PGSQL_VERSION.jar \
 
 WORKDIR /usr/share
 RUN curl -o /opt/src/spark-$SPARK_VERSION.tgz \
-    https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop2.7.tgz && \
+    http://192.168.91.131:8080/spark-$SPARK_VERSION-bin-hadoop2.7.tgz && \
     tar zxvf /opt/src/spark-$SPARK_VERSION.tgz && \
     echo "SPARK_HOME="`pwd`/`ls -d spark*` >> /etc/predictionio/pio-env.sh && \
     rm -rf /opt/src

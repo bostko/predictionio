@@ -312,13 +312,13 @@ mkdir -p ${vendors_dir}
 
 # Spark
 echo -e "\033[1;36mStarting Spark setup in:\033[0m $spark_dir"
-if [[ ! -e spark-${SPARK_VERSION}-bin-hadoop2.6.tgz ]]; then
+if [[ ! -e spark-${SPARK_VERSION}-bin-hadoop2.7.tgz ]]; then
   echo "Downloading Spark..."
-  curl -O http://www-us.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.6.tgz
+  curl -O http://www-us.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz
 fi
-tar xf spark-${SPARK_VERSION}-bin-hadoop2.6.tgz
+tar xf spark-${SPARK_VERSION}-bin-hadoop2.7.tgz
 rm -rf ${spark_dir}
-mv spark-${SPARK_VERSION}-bin-hadoop2.6 ${spark_dir}
+mv spark-${SPARK_VERSION}-bin-hadoop2.7 ${spark_dir}
 
 echo "Updating: $pio_dir/conf/pio-env.sh"
 ${SED_CMD} "s|SPARK_HOME=.*|SPARK_HOME=$spark_dir|g" ${pio_dir}/conf/pio-env.sh
